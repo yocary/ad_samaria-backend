@@ -36,22 +36,22 @@ public class CommonController<E, S extends CommonSvc<E>, V extends CommonValidat
     @Autowired
     protected V validator;
     
-    @GetMapping
-    @ApiOperation(value = "Consulta el listado de objetos de ad_samaria")
-    public ResponseEntity<?> findAll(@RequestHeader(name = "Accept-Languaje", required = false) Locale locale){ //listar todos los datos que tiene la tabla 
-        return ResponseEntity.ok().body(service.findAll());
-    }
+//    @GetMapping
+//    @ApiOperation(value = "Consulta el listado de objetos de ad_samaria")
+//    public ResponseEntity<?> findAll(@RequestHeader(name = "Accept-Languaje", required = false) Locale locale){ //listar todos los datos que tiene la tabla 
+//        return ResponseEntity.ok().body(service.findAll());
+//    }
     
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Consulta un objeto especifico de ad_samaria")
-    public ResponseEntity<?> findById(@PathVariable(required = true) @ApiParam(value = "id") Long id, @RequestHeader(name = "Accept-Languaje", required = false) Locale locale){ //listarnos los datos en base al id si es en la tabla empleados ingreso mi dpi traera mis datos 
-        Optional<E> o = service.findById(id);
-        if(!o.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
-        
-        return ResponseEntity.ok(o.get());
-    }
+//    @GetMapping("/{id}")
+//    @ApiOperation(value = "Consulta un objeto especifico de ad_samaria")
+//    public ResponseEntity<?> findById(@PathVariable(required = true) @ApiParam(value = "id") Long id, @RequestHeader(name = "Accept-Languaje", required = false) Locale locale){ //listarnos los datos en base al id si es en la tabla empleados ingreso mi dpi traera mis datos 
+//        Optional<E> o = service.findById(id);
+//        if(!o.isPresent()){
+//            return ResponseEntity.notFound().build();
+//        }
+//        
+//        return ResponseEntity.ok(o.get());
+//    }
     
     @PostMapping  //inserta datos en una tabla
     @ApiOperation(value = "Guarda la información de un objeto en ad_samaria")
@@ -63,13 +63,13 @@ public class CommonController<E, S extends CommonSvc<E>, V extends CommonValidat
         E entityDb = service.save(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(entityDb);
     }
-    
-    @DeleteMapping("/{id}")  //elimina el registro en base al id
-    @ApiOperation(value = "Elimina la infirmación de un objeto en ad_samaria")
-    public ResponseEntity<?> eliminar(@PathVariable(required = true) @ApiParam(value = "id") Long id, @RequestHeader(name = "Accept-Languaje", required = false) Locale locale){
-        service.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+//    
+//    @DeleteMapping("/{id}")  //elimina el registro en base al id
+//    @ApiOperation(value = "Elimina la infirmación de un objeto en ad_samaria")
+//    public ResponseEntity<?> eliminar(@PathVariable(required = true) @ApiParam(value = "id") Long id, @RequestHeader(name = "Accept-Languaje", required = false) Locale locale){
+//        service.deleteById(id);
+//        return ResponseEntity.noContent().build();
+//    }
     
     protected ResponseEntity<?> validar(BindingResult result){
         Map<String, Object> errores = new HashMap<>();
