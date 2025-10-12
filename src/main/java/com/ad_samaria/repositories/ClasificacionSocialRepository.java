@@ -6,6 +6,7 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.ClasificacionSocial;
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClasificacionSocialRepository extends CrudRepository<ClasificacionSocial, Object> {
 
+    List<ClasificacionSocial> findAllByOrderByNombreAsc();
 }

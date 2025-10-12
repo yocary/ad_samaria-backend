@@ -6,6 +6,7 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.Sexo;
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SexoRepository extends CrudRepository<Sexo, Object> {
+
+    List<Sexo> findAllByOrderByNombreAsc();
 
 }

@@ -6,6 +6,7 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.Persona;
+import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +17,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonaRepository extends CrudRepository<Persona, Object> {
 
-}
+    Optional<Persona> findByDpi(String dpi);
 
+}

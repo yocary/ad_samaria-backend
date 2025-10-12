@@ -6,6 +6,7 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.TipoPersona;
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +17,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TipoPersonaRepository extends CrudRepository<TipoPersona, Object> {
 
-}
+    List<TipoPersona> findAllByOrderByNombreAsc();
 
+}

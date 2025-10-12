@@ -6,6 +6,7 @@
 package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
+import com.ad_samaria.dto.CrearPersonaRequest;
 import com.ad_samaria.models.Persona;
 
 /**
@@ -13,6 +14,7 @@ import com.ad_samaria.models.Persona;
  * @author Yocary
  */
 public interface PersonaSvc extends CommonSvc<Persona> {
-    
-}
 
+    Persona crearPersona(CrearPersonaRequest req);
+
+}
