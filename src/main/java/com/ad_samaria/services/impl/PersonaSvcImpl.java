@@ -7,6 +7,7 @@ package com.ad_samaria.services.impl;
 
 import com.ad_samaria.commons.CommonSvcImpl;
 import com.ad_samaria.dto.CrearPersonaRequest;
+import com.ad_samaria.dto.PersonaMiniDTO;
 import com.ad_samaria.models.Persona;
 import com.ad_samaria.repositories.ClasificacionSocialRepository;
 import com.ad_samaria.repositories.EstadoCivilRepository;
@@ -15,6 +16,9 @@ import com.ad_samaria.repositories.SexoRepository;
 import com.ad_samaria.repositories.TipoPersonaRepository;
 import com.ad_samaria.services.PersonaSvc;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +79,26 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
 
         // estatus/ministerio quedan null si no vienen en el formulario
         return repository.save(p);
+    }
+
+    @Override
+    public List<PersonaMiniDTO> buscarMin(String q) {
+        if (q == null) {
+            q = "";
+        }
+        q = q.trim();
+        if (q.length() < 2) {
+            return Collections.emptyList();
+        }
+
+        List<Object[]> rows = repository.buscarMin(q);
+        List<PersonaMiniDTO> out = new ArrayList<>();
+        for (Object[] r : rows) {
+            Long id = r[0] == null ? null : ((Number) r[0]).longValue();
+            String nombre = (String) r[1];
+            out.add(new PersonaMiniDTO(id, nombre));
+        }
+        return out;
     }
 
 }

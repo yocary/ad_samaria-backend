@@ -7,6 +7,7 @@ package com.ad_samaria.controllers;
 
 import com.ad_samaria.commons.CommonController;
 import com.ad_samaria.dto.CrearPersonaRequest;
+import com.ad_samaria.dto.PersonaMiniDTO;
 import com.ad_samaria.models.Persona;
 import com.ad_samaria.repositories.ClasificacionSocialRepository;
 import com.ad_samaria.repositories.EstadoCivilRepository;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -66,5 +68,10 @@ public class PersonaController extends CommonController<Persona, PersonaSvc, Per
     @GetMapping("/tipos-persona")
     public List<?> tiposPersona() {
         return tipoPersonaRepository.findAllByOrderByNombreAsc();
+    }
+
+    @GetMapping("/buscar")
+    public List<PersonaMiniDTO> buscar(@RequestParam("q") String q) {
+        return service.buscarMin(q);
     }
 }

@@ -7,7 +7,9 @@ package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
 import com.ad_samaria.dto.CrearPersonaRequest;
+import com.ad_samaria.dto.PersonaMiniDTO;
 import com.ad_samaria.models.Persona;
+import java.util.List;
 
 /**
  *
@@ -16,5 +18,7 @@ import com.ad_samaria.models.Persona;
 public interface PersonaSvc extends CommonSvc<Persona> {
 
     Persona crearPersona(CrearPersonaRequest req);
+
+    List<PersonaMiniDTO> buscarMin(String q);
 
 }

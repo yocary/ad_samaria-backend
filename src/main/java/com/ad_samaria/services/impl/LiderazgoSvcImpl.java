@@ -15,6 +15,7 @@ import com.ad_samaria.repositories.LiderazgoRolRepository;
 import com.ad_samaria.services.LiderazgoSvc;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -113,11 +114,15 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
-    public void agregarMiembro(Long liderazgoId, Long personaId, Long rolId, String desde) {
-        // desde viene yyyy-MM-dd; validación simple
-        if (desde == null || desde.trim().isEmpty()) {
-            desde = LocalDate.now().toString();
+    public void agregarMiembro(Long liderazgoId, Long personaId, Long rolId, String desdeStr) {
+        // Convertir el string a LocalDate
+        LocalDate desde;
+        try {
+            desde = LocalDate.parse(desdeStr); // Convierte "yyyy-MM-dd" a LocalDate
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Formato de fecha inválido. Use yyyy-MM-dd: " + desdeStr);
         }
+
         liderazgoMiembroRepository.agregarMiembro(liderazgoId, personaId, rolId, desde);
     }
 

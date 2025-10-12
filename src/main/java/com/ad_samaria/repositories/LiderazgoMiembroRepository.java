@@ -6,6 +6,7 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.LiderazgoMiembro;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,15 +36,14 @@ public interface LiderazgoMiembroRepository extends CrudRepository<LiderazgoMiem
 
     @Modifying
     @Transactional
-    @Query(value
-            = "INSERT INTO ad_samaria.liderazgo_miembro "
-            + " (liderazgo_id, persona_id, liderazgo_rol_id, desde, hasta) "
-            + " VALUES (:liderazgoId, :personaId, :rolId, :desde, NULL)",
+    @Query(value = "INSERT INTO ad_samaria.liderazgo_miembro "
+            + "(liderazgo_id, persona_id, liderazgo_rol_id, desde, hasta) "
+            + "VALUES (:liderazgoId, :personaId, :rolId, :desde, NULL)",
             nativeQuery = true)
     void agregarMiembro(@Param("liderazgoId") Long liderazgoId,
             @Param("personaId") Long personaId,
             @Param("rolId") Long rolId,
-            @Param("desde") String desde /* 'yyyy-MM-dd' */);
+            @Param("desde") LocalDate desde); 
 
     @Modifying
     @Transactional
