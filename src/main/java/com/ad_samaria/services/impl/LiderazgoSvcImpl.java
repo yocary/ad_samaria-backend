@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -175,6 +176,16 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
         int n = liderazgoMiembroRepository.desactivarMiembro(liderazgoMiembroId);
         if (n == 0) {
             throw new RuntimeException("Registro no encontrado o ya inactivo");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void eliminarMiembro(long liderazgoId, long miembroId) {
+        int rows = liderazgoMiembroRepository.eliminarMiembro(liderazgoId, miembroId);
+        if (rows == 0) {
+            // No se encontró la relación o no pertenece a ese liderazgo
+            throw new IllegalArgumentException("No existe el integrante especificado en este liderazgo.");
         }
     }
 

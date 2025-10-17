@@ -53,4 +53,12 @@ public interface LiderazgoMiembroRepository extends CrudRepository<LiderazgoMiem
             nativeQuery = true)
     int desactivarMiembro(@Param("id") Long id);
 
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM ad_samaria.liderazgo_miembro "
+            + "WHERE id = :miembroId AND liderazgo_id = :liderazgoId",
+            nativeQuery = true)
+    int eliminarMiembro(@Param("liderazgoId") long liderazgoId,
+            @Param("miembroId") long miembroId);
+
 }

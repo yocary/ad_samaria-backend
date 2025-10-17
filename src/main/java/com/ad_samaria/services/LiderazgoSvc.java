@@ -39,7 +39,9 @@ public interface LiderazgoSvc extends CommonSvc<Liderazgo> {
     void editarRol(Long liderazgoId, Long rolId, EditarRolRequest req);
 
     void eliminarRol(Long liderazgoId, Long rolId);
-    
+
     void agregarMiembro(long liderazgoId, long personaId, long rolId);
+
+    void eliminarMiembro(long liderazgoId, long miembroId);
 
 }

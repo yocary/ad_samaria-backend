@@ -87,7 +87,7 @@ public class LiderazgoController extends CommonController<Liderazgo, LiderazgoSv
 
     @PostMapping("/{liderazgoId}/miembros")
     public ResponseEntity<?> agregarMiembro(@PathVariable long liderazgoId,
-                                            @RequestBody AgregarMiembroRequest req) {
+            @RequestBody AgregarMiembroRequest req) {
         service.agregarMiembro(liderazgoId, req.getPersonaId(), req.getRolId());
         return ResponseEntity.ok().build();
     }
@@ -95,6 +95,13 @@ public class LiderazgoController extends CommonController<Liderazgo, LiderazgoSv
     @DeleteMapping("/miembros/{liderazgoMiembroId}")
     public void desactivar(@PathVariable Long liderazgoMiembroId) {
         service.desactivarMiembro(liderazgoMiembroId);
+    }
+
+    @DeleteMapping("/{liderazgoId}/miembros/{miembroLiderazgoId}")
+    public ResponseEntity<Void> eliminarMiembro(@PathVariable long liderazgoId,
+            @PathVariable("miembroLiderazgoId") long miembroId) {
+        service.eliminarMiembro(liderazgoId, miembroId);
+        return ResponseEntity.noContent().build(); // 204
     }
 
 }
