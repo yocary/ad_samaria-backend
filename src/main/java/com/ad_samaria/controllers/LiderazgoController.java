@@ -8,13 +8,16 @@ package com.ad_samaria.controllers;
 import com.ad_samaria.commons.CommonController;
 import com.ad_samaria.dto.AgregarMiembroLiderazgoRequest;
 import com.ad_samaria.dto.CrearLiderazgoRequest;
+import com.ad_samaria.dto.CrearRolRequest;
+import com.ad_samaria.dto.EditarRolRequest;
 import com.ad_samaria.dto.LiderazgoListadoDTO;
 import com.ad_samaria.dto.LiderazgoMiembroDTO;
 import com.ad_samaria.models.Liderazgo;
+import com.ad_samaria.projections.RolListadoProjection;
 import com.ad_samaria.services.LiderazgoSvc;
 import com.ad_samaria.validator.LiderazgoValidator;
 import java.util.List;
-import java.util.Map;
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,20 +55,27 @@ public class LiderazgoController extends CommonController<Liderazgo, LiderazgoSv
         service.eliminar(id);
     }
 
-    // -------- Roles --------
-    @GetMapping("/{id}/roles")
-    public List<String> roles(@PathVariable("id") Long liderazgoId) {
+    // LISTAR ROLES
+    @GetMapping("/{liderazgoId}/roles")
+    public List<RolListadoProjection> listarRoles(@PathVariable Long liderazgoId) {
         return service.listarRoles(liderazgoId);
     }
 
-    @PostMapping("/{id}/roles")
-    public void crearRol(@PathVariable("id") Long liderazgoId, @RequestBody Map<String, String> body) {
-        service.crearRol(liderazgoId, body.getOrDefault("nombre", ""));
+    @PostMapping("/{liderazgoId}/roles")
+    public void crearRol(@PathVariable Long liderazgoId, @Valid @RequestBody CrearRolRequest req) {
+        service.crearRol(liderazgoId, req);
     }
 
-    @DeleteMapping("/roles/{rolId}")
-    public void eliminarRol(@PathVariable Long rolId) {
-        service.eliminarRol(rolId);
+    @PutMapping("/{liderazgoId}/roles/{rolId}")
+    public void editarRol(@PathVariable Long liderazgoId,
+            @PathVariable Long rolId,
+            @RequestBody EditarRolRequest req) {
+        service.editarRol(liderazgoId, rolId, req);
+    }
+
+    @DeleteMapping("/{liderazgoId}/roles/{rolId}")
+    public void eliminarRol(@PathVariable Long liderazgoId, @PathVariable Long rolId) {
+        service.eliminarRol(liderazgoId, rolId);
     }
 
     // -------- Miembros --------

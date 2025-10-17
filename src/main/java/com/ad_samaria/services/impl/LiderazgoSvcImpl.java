@@ -6,12 +6,16 @@
 package com.ad_samaria.services.impl;
 
 import com.ad_samaria.commons.CommonSvcImpl;
+import com.ad_samaria.dto.CrearRolRequest;
+import com.ad_samaria.dto.EditarRolRequest;
 import com.ad_samaria.dto.LiderazgoListadoDTO;
 import com.ad_samaria.dto.LiderazgoMiembroDTO;
 import com.ad_samaria.models.Liderazgo;
+import com.ad_samaria.projections.RolListadoProjection;
 import com.ad_samaria.repositories.LiderazgoMiembroRepository;
 import com.ad_samaria.repositories.LiderazgoRepository;
 import com.ad_samaria.repositories.LiderazgoRolRepository;
+import com.ad_samaria.repositories.RolSistemaRepository;
 import com.ad_samaria.services.LiderazgoSvc;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -31,10 +37,13 @@ import org.springframework.stereotype.Service;
 public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoRepository> implements LiderazgoSvc {
 
     @Autowired
-    private LiderazgoRolRepository liderazgoRolRepository;
+    private LiderazgoRolRepository rolRepository;
 
     @Autowired
     private LiderazgoMiembroRepository liderazgoMiembroRepository;
+
+    @Autowired
+    private RolSistemaRepository rolSistemaRepository;
 
     private static final DateTimeFormatter OUT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -72,23 +81,59 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
 
     // ----- Roles -----
     @Override
-    public List<String> listarRoles(Long liderazgoId) {
-        List<Object[]> rows = liderazgoRolRepository.listarPorLiderazgo(liderazgoId);
-        List<String> out = new ArrayList<>();
-        for (Object[] r : rows) {
-            out.add((String) r[2]); // id, liderazgo_id, nombre
+    public List<RolListadoProjection> listarRoles(Long liderazgoId) {
+        validarLiderazgo(liderazgoId);
+        return rolRepository.listarRoles(liderazgoId);
+    }
+
+    @Override
+    public void crearRol(Long liderazgoId, CrearRolRequest req) {
+        validarLiderazgo(liderazgoId);
+
+        final String nombre = (req.getNombre() == null ? "" : req.getNombre().trim());
+        if (nombre.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre es obligatorio");
         }
-        return out;
+        if (rolRepository.contarPorNombre(liderazgoId, nombre) > 0) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un rol con ese nombre en este liderazgo");
+        }
+        rolRepository.crearRol(liderazgoId, nombre);
     }
 
     @Override
-    public void crearRol(Long liderazgoId, String nombre) {
-        liderazgoRolRepository.crear(liderazgoId, nombre.trim());
+    public void editarRol(Long liderazgoId, Long rolId, EditarRolRequest req) {
+        validarLiderazgo(liderazgoId);
+
+        String nombre = req.getNombre();
+        if (nombre != null) {
+            nombre = nombre.trim();
+            if (nombre.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre no puede ser vacío");
+            }
+            if (rolRepository.contarPorNombreExcluyendo(liderazgoId, nombre, rolId) > 0) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un rol con ese nombre en este liderazgo");
+            }
+        }
+
+        int updated = rolRepository.editarRol(liderazgoId, rolId, nombre);
+        if (updated == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado para este liderazgo");
+        }
     }
 
     @Override
-    public void eliminarRol(Long rolId) {
-        liderazgoRolRepository.eliminar(rolId);
+    public void eliminarRol(Long liderazgoId, Long rolId) {
+        validarLiderazgo(liderazgoId);
+        int deleted = rolRepository.eliminarRol(liderazgoId, rolId);
+        if (deleted == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado para este liderazgo");
+        }
+    }
+
+    private void validarLiderazgo(Long liderazgoId) {
+        if (liderazgoId == null || !repository.existsById(liderazgoId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "liderazgoId inválido");
+        }
     }
 
     // ----- Miembros -----
