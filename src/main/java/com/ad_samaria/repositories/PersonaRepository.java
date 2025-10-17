@@ -6,6 +6,7 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.Persona;
+import com.ad_samaria.projections.PersonaMiniProjection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
@@ -35,5 +36,17 @@ public interface PersonaRepository extends CrudRepository<Persona, Object> {
             nativeQuery = true)
     @Transactional(readOnly = true)
     List<Object[]> buscarMin(@Param("q") String q);
+
+    @Query(value
+            = "SELECT \n"
+            + "  p.id AS id,\n"
+            + "  TRIM(p.nombres || ' ' || p.apellido_paterno || COALESCE(' ' || p.apellido_materno, '')) AS nombre\n"
+            + "FROM \n"
+            + "  ad_samaria.persona p\n"
+            + "ORDER BY \n"
+            + "  p.apellido_paterno, p.apellido_materno NULLS LAST, p.nombres",
+            nativeQuery = true)
+    @Transactional(readOnly = true)
+    List<PersonaMiniProjection> listarPersonasMini();
 
 }

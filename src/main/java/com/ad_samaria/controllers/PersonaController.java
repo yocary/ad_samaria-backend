@@ -9,6 +9,7 @@ import com.ad_samaria.commons.CommonController;
 import com.ad_samaria.dto.CrearPersonaRequest;
 import com.ad_samaria.dto.PersonaMiniDTO;
 import com.ad_samaria.models.Persona;
+import com.ad_samaria.projections.PersonaMiniProjection;
 import com.ad_samaria.repositories.ClasificacionSocialRepository;
 import com.ad_samaria.repositories.EstadoCivilRepository;
 import com.ad_samaria.repositories.SexoRepository;
@@ -73,5 +74,10 @@ public class PersonaController extends CommonController<Persona, PersonaSvc, Per
     @GetMapping("/buscar")
     public List<PersonaMiniDTO> buscar(@RequestParam("q") String q) {
         return service.buscarMin(q);
+    }
+
+    @GetMapping("/listar-todos")
+    public List<PersonaMiniProjection> listarTodosMini() {
+        return service.listarPersonasMini();
     }
 }

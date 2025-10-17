@@ -9,6 +9,7 @@ import com.ad_samaria.commons.CommonSvcImpl;
 import com.ad_samaria.dto.CrearPersonaRequest;
 import com.ad_samaria.dto.PersonaMiniDTO;
 import com.ad_samaria.models.Persona;
+import com.ad_samaria.projections.PersonaMiniProjection;
 import com.ad_samaria.repositories.ClasificacionSocialRepository;
 import com.ad_samaria.repositories.EstadoCivilRepository;
 import com.ad_samaria.repositories.PersonaRepository;
@@ -99,6 +100,11 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
             out.add(new PersonaMiniDTO(id, nombre));
         }
         return out;
+    }
+    
+     @Override
+    public List<PersonaMiniProjection> listarPersonasMini() {
+        return repository.listarPersonasMini();
     }
 
 }

@@ -17,13 +17,12 @@ import com.ad_samaria.repositories.LiderazgoRepository;
 import com.ad_samaria.repositories.LiderazgoRolRepository;
 import com.ad_samaria.repositories.RolSistemaRepository;
 import com.ad_samaria.services.LiderazgoSvc;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -159,16 +158,16 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
-    public void agregarMiembro(Long liderazgoId, Long personaId, Long rolId, String desdeStr) {
-        // Convertir el string a LocalDate
-        LocalDate desde;
+    public void agregarMiembro(long liderazgoId, long personaId, long rolId) {
         try {
-            desde = LocalDate.parse(desdeStr); // Convierte "yyyy-MM-dd" a LocalDate
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Formato de fecha inválido. Use yyyy-MM-dd: " + desdeStr);
+            int rows = liderazgoMiembroRepository.agregarMiembro(liderazgoId, personaId, rolId);
+            if (rows == 0) {
+                throw new IllegalStateException("No se insertó el integrante.");
+            }
+        } catch (DataIntegrityViolationException ex) {
+            // Puede ser FK o la UNIQUE (liderazgo_id, persona_id)
+            throw new IllegalArgumentException("La persona ya es integrante de este liderazgo o datos inválidos.", ex);
         }
-
-        liderazgoMiembroRepository.agregarMiembro(liderazgoId, personaId, rolId, desde);
     }
 
     @Override

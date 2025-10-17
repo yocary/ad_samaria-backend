@@ -36,14 +36,14 @@ public interface LiderazgoMiembroRepository extends CrudRepository<LiderazgoMiem
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO ad_samaria.liderazgo_miembro "
+    @Query(value
+            = "INSERT INTO ad_samaria.liderazgo_miembro "
             + "(liderazgo_id, persona_id, liderazgo_rol_id, desde, hasta) "
-            + "VALUES (:liderazgoId, :personaId, :rolId, :desde, NULL)",
+            + "VALUES (:liderazgoId, :personaId, :rolId, CURRENT_DATE, NULL)",
             nativeQuery = true)
-    void agregarMiembro(@Param("liderazgoId") Long liderazgoId,
-            @Param("personaId") Long personaId,
-            @Param("rolId") Long rolId,
-            @Param("desde") LocalDate desde); 
+    int agregarMiembro(@Param("liderazgoId") long liderazgoId,
+            @Param("personaId") long personaId,
+            @Param("rolId") long rolId);
 
     @Modifying
     @Transactional

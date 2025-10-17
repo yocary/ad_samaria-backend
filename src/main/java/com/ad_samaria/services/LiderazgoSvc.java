@@ -30,8 +30,6 @@ public interface LiderazgoSvc extends CommonSvc<Liderazgo> {
 
     List<LiderazgoMiembroDTO> listarMiembros(Long liderazgoId);
 
-    void agregarMiembro(Long liderazgoId, Long personaId, Long rolId, String desde);
-
     void desactivarMiembro(Long liderazgoMiembroId);
 
     List<RolListadoProjection> listarRoles(Long liderazgoId);
@@ -41,5 +39,7 @@ public interface LiderazgoSvc extends CommonSvc<Liderazgo> {
     void editarRol(Long liderazgoId, Long rolId, EditarRolRequest req);
 
     void eliminarRol(Long liderazgoId, Long rolId);
+    
+    void agregarMiembro(long liderazgoId, long personaId, long rolId);
 
 }

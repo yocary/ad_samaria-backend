@@ -6,7 +6,7 @@
 package com.ad_samaria.controllers;
 
 import com.ad_samaria.commons.CommonController;
-import com.ad_samaria.dto.AgregarMiembroLiderazgoRequest;
+import com.ad_samaria.dto.AgregarMiembroRequest;
 import com.ad_samaria.dto.CrearLiderazgoRequest;
 import com.ad_samaria.dto.CrearRolRequest;
 import com.ad_samaria.dto.EditarRolRequest;
@@ -18,6 +18,7 @@ import com.ad_samaria.services.LiderazgoSvc;
 import com.ad_samaria.validator.LiderazgoValidator;
 import java.util.List;
 import javax.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,10 +85,11 @@ public class LiderazgoController extends CommonController<Liderazgo, LiderazgoSv
         return service.listarMiembros(liderazgoId);
     }
 
-    @PostMapping("/{id}/miembros")
-    public void agregarMiembro(@PathVariable("id") Long liderazgoId,
-            @RequestBody AgregarMiembroLiderazgoRequest req) {
-        service.agregarMiembro(liderazgoId, req.getPersonaId(), req.getRolId(), req.getDesde());
+    @PostMapping("/{liderazgoId}/miembros")
+    public ResponseEntity<?> agregarMiembro(@PathVariable long liderazgoId,
+                                            @RequestBody AgregarMiembroRequest req) {
+        service.agregarMiembro(liderazgoId, req.getPersonaId(), req.getRolId());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/miembros/{liderazgoMiembroId}")
