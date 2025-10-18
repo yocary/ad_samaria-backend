@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificado_ninos" pageWidth="842" pageHeight="595" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f342d246-9cb3-4727-9a5a-5f6c9827fecf">
+	<parameter name="nombreMiembro" class="java.lang.String"/>
+	<parameter name="nombrePadre" class="java.lang.String"/>
+	<parameter name="nombreMadre" class="java.lang.String"/>
+	<parameter name="lugarFechaNacimiento" class="java.lang.String"/>
+	<parameter name="fechaExpedicion" class="java.lang.String"/>
+	<title>
+		<band height="595">
+			<image>
+				<reportElement x="0" y="0" width="842" height="595" uuid="340d1fb7-0dd2-4af4-98fc-2af02f95e833"/>
+				<imageExpression><![CDATA["imagenes/certificado_niños.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="220" y="180" width="460" height="30" uuid="75d3ca9d-0363-49e8-9b6e-b8ad53a7f3dc"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreMiembro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="230" width="240" height="20" uuid="728af7df-31fc-492b-8b1c-41e188849802"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombrePadre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="230" width="230" height="20" uuid="eb50a680-0996-4fba-97fc-c67a4d069210"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreMadre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="274" width="370" height="20" uuid="4daee2f2-82dc-424d-b755-41e010e48690"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{lugarFechaNacimiento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="393" width="430" height="20" uuid="89bd7148-4030-4e40-8c7f-9e337b048518"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fechaExpedicion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

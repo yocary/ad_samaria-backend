@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificado_matrimonio" pageWidth="842" pageHeight="595" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="1a14e321-dd74-4ace-959e-61120faf2c0b">
+	<parameter name="esposo" class="java.lang.String"/>
+	<parameter name="esposa" class="java.lang.String"/>
+	<parameter name="fechaExpedicion" class="java.lang.String"/>
+	<title>
+		<band height="595">
+			<image>
+				<reportElement x="0" y="0" width="842" height="595" uuid="43ca99d4-9249-4405-9f76-b427975d30fa"/>
+				<imageExpression><![CDATA["imagenes/certificado_matrimonio.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="113" y="257" width="270" height="30" uuid="35bab3ed-0a90-4b32-993f-76fd24a4ffd8"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{esposo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="260" y="370" width="175" height="20" uuid="cd849dbc-2472-4f6a-ade4-0b66738bea21"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fechaExpedicion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="256" width="280" height="30" uuid="50659839-9f9c-48fc-9b22-bf981f449e83"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{esposa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="407" y="264" width="28" height="30" uuid="e02cde23-2a1b-45de-92e6-bcf41f4ba870"/>
+				<textElement>
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[y]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>
