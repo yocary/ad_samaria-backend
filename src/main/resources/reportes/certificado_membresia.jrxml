@@ -10,7 +10,7 @@
 				<imageExpression><![CDATA["imagenes/certificado_membresia.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="300" y="250" width="250" height="30" uuid="01b09e97-861b-4e4e-a9f0-f4576f317f3e"/>
+				<reportElement x="245" y="250" width="400" height="30" uuid="01b09e97-861b-4e4e-a9f0-f4576f317f3e"/>
 				<textElement textAlignment="Center">
 					<font size="20" isBold="true"/>
 				</textElement>

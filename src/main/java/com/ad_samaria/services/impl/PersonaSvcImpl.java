@@ -102,7 +102,7 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
         return out;
     }
     
-     @Override
+    @Override
     public List<PersonaMiniProjection> listarPersonasMini() {
         return repository.listarPersonasMini();
     }
