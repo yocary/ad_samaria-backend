@@ -7,6 +7,7 @@ package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
 import com.ad_samaria.dto.CrearPersonaRequest;
+import com.ad_samaria.dto.PersonaFichaDTO;
 import com.ad_samaria.dto.PersonaMiniDTO;
 import com.ad_samaria.models.Persona;
 import com.ad_samaria.projections.PersonaMiniProjection;
@@ -23,5 +24,7 @@ public interface PersonaSvc extends CommonSvc<Persona> {
     List<PersonaMiniDTO> buscarMin(String q);
 
     List<PersonaMiniProjection> listarPersonasMini();
+    
+    PersonaFichaDTO obtenerFicha(Long personaId);
 
 }

@@ -7,8 +7,13 @@ package com.ad_samaria.services.impl;
 
 import com.ad_samaria.commons.CommonSvcImpl;
 import com.ad_samaria.dto.CrearPersonaRequest;
+import com.ad_samaria.dto.FichaFamiliaDTO;
+import com.ad_samaria.dto.FichaGrupoDTO;
+import com.ad_samaria.dto.FichaLiderazgoDTO;
+import com.ad_samaria.dto.PersonaFichaDTO;
 import com.ad_samaria.dto.PersonaMiniDTO;
 import com.ad_samaria.models.Persona;
+import com.ad_samaria.projections.PersonaFichaCabeceraProjection;
 import com.ad_samaria.projections.PersonaMiniProjection;
 import com.ad_samaria.repositories.ClasificacionSocialRepository;
 import com.ad_samaria.repositories.EstadoCivilRepository;
@@ -20,8 +25,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -101,10 +108,52 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
         }
         return out;
     }
-    
+
     @Override
     public List<PersonaMiniProjection> listarPersonasMini() {
         return repository.listarPersonasMini();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PersonaFichaDTO obtenerFicha(Long personaId) {
+        PersonaFichaCabeceraProjection cab = repository.obtenerCabecera(personaId)
+                .orElseThrow(() -> new RuntimeException("Persona no encontrada: " + personaId));
+
+        List<FichaFamiliaDTO> familias = repository.familiasDePersona(personaId).stream()
+                .map(r -> new FichaFamiliaDTO(r.getFamiliaId(), r.getFamiliaNombre(), r.getRolFamiliar()))
+                .collect(Collectors.toList());
+
+        List<FichaGrupoDTO> grupos = repository.gruposDePersona(personaId).stream()
+                .map(r -> new FichaGrupoDTO(r.getGrupoId(), r.getGrupoNombre(), r.getMinisterio()))
+                .collect(Collectors.toList());
+
+        List<FichaLiderazgoDTO> liderazgos = repository.liderazgosDePersona(personaId).stream()
+                .map(r -> new FichaLiderazgoDTO(
+                r.getLiderazgoId(),
+                r.getLiderazgo(),
+                r.getRol(),
+                r.getDesde(),
+                r.getHasta()
+        ))
+                .collect(Collectors.toList());
+
+        return new PersonaFichaDTO(
+                cab.getId(),
+                cab.getNombreCompleto(),
+                cab.getEstatus(),
+                cab.getClasificacion(),
+                cab.getTipoPersona(),
+                cab.getEstadoCivil(),
+                cab.getSexo(),
+                cab.getEdad(),
+                cab.getFechaNacimiento(),
+                cab.getTelefono(),
+                cab.getDpi(),
+                cab.getDireccion(),
+                cab.getMinisterio(),
+                familias, grupos, liderazgos
+        );
     }
 
 }

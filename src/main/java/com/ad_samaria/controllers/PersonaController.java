@@ -7,6 +7,7 @@ package com.ad_samaria.controllers;
 
 import com.ad_samaria.commons.CommonController;
 import com.ad_samaria.dto.CrearPersonaRequest;
+import com.ad_samaria.dto.PersonaFichaDTO;
 import com.ad_samaria.dto.PersonaMiniDTO;
 import com.ad_samaria.models.Persona;
 import com.ad_samaria.projections.PersonaMiniProjection;
@@ -19,6 +20,7 @@ import com.ad_samaria.validator.PersonaValidator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,5 +81,10 @@ public class PersonaController extends CommonController<Persona, PersonaSvc, Per
     @GetMapping("/listar-todos")
     public List<PersonaMiniProjection> listarTodosMini() {
         return service.listarPersonasMini();
+    }
+
+    @GetMapping("/{id}/ficha")
+    public PersonaFichaDTO ficha(@PathVariable Long id) {
+        return service.obtenerFicha(id);
     }
 }
