@@ -12,8 +12,7 @@ import lombok.Data;
  * @author Yocary
  */
 @Data
-public class AgregarMiembroRequest {
-
-    private Long personaId;
-    private Short rolFamId;
+public class CrearFamiliaRequest {
+    
+    private String name;
 }

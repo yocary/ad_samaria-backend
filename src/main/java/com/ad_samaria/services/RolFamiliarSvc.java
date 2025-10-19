@@ -6,13 +6,17 @@
 package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
+import com.ad_samaria.dto.RolDto;
 import com.ad_samaria.models.RolFamiliar;
+import java.util.List;
 
 /**
  *
  * @author Yocary
  */
 public interface RolFamiliarSvc extends CommonSvc<RolFamiliar> {
+    
+        List<RolDto> listar();
     
 }
 

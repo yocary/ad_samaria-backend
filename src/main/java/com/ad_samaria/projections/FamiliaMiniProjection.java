@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ad_samaria.dto;
-
-import lombok.Data;
+package com.ad_samaria.projections;
 
 /**
  *
  * @author Yocary
  */
-@Data
-public class AgregarMiembroRequest {
+public interface FamiliaMiniProjection {
 
-    private Long personaId;
-    private Short rolFamId;
+    Long getId();
+
+    String getNombre();
+
 }

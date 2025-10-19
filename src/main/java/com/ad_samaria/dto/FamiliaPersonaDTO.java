@@ -5,20 +5,21 @@
  */
 package com.ad_samaria.dto;
 
-import lombok.Data;
-
 /**
  *
  * @author Yocary
  */
-@Data
-public class RolDto {
+public class FamiliaPersonaDTO {
 
-    private short id;
-    private String nombre;
+    public Long id;
+    public Long personaId;
+    public String nombre;
+    public String rol;
 
-    public RolDto(short id, String nombre) {
+    public FamiliaPersonaDTO(Long id, Long personaId, String nombre, String rol) {
         this.id = id;
+        this.personaId = personaId;
         this.nombre = nombre;
+        this.rol = rol;
     }
 }

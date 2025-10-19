@@ -88,7 +88,7 @@ public class LiderazgoController extends CommonController<Liderazgo, LiderazgoSv
     @PostMapping("/{liderazgoId}/miembros")
     public ResponseEntity<?> agregarMiembro(@PathVariable long liderazgoId,
             @RequestBody AgregarMiembroRequest req) {
-        service.agregarMiembro(liderazgoId, req.getPersonaId(), req.getRolId());
+        service.agregarMiembro(liderazgoId, req.getPersonaId(), req.getRolFamId());
         return ResponseEntity.ok().build();
     }
 
