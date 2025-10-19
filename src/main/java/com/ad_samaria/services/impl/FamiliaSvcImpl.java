@@ -14,9 +14,9 @@ import com.ad_samaria.repositories.FamiliaPersonaRepository;
 import com.ad_samaria.repositories.FamiliaRepository;
 import com.ad_samaria.services.FamiliaSvc;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +45,7 @@ public class FamiliaSvcImpl extends CommonSvcImpl<Familia, FamiliaRepository> im
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nombre requerido");
         }
         Familia f = new Familia();
+        f.setCreadoEn(new Date());
         f.setNombre(nombre.trim());
         return repository.save(f);
     }
