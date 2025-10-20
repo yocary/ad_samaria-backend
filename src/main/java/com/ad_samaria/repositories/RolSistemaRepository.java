@@ -6,6 +6,8 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.RolSistema;
+import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +18,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RolSistemaRepository extends CrudRepository<RolSistema, Object> {
 
+    @Query(value = "SELECT rs FROM RolSistema rs ORDER BY rs.nombre")
+    List<RolSistema> listarOrdenado();
 }

@@ -7,13 +7,13 @@ package com.ad_samaria.dto;
 
 /**
  *
- * @author Pablo
+ * @author Yocary
  */
 public class FichaGrupoDTO {
 
     public Long grupoId;
     public String grupoNombre;
-    public String ministerio;  // del grupo (FK a ministerio)
+    public String ministerio; 
 
     public FichaGrupoDTO() {
     }

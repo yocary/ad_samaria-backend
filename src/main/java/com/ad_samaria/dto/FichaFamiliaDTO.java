@@ -7,7 +7,7 @@ package com.ad_samaria.dto;
 
 /**
  *
- * @author Pablo
+ * @author Yocary
  */
 public class FichaFamiliaDTO {
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author Pablo
+ * @author Yocary
  */
 public class PersonaFichaDTO {
 
@@ -20,11 +20,11 @@ public class PersonaFichaDTO {
     public String tipoPersona;
     public String estadoCivil;
     public String sexo;
-    public Integer edad;         // calculada
+    public Integer edad;      
     public String telefono;
     public String dpi;
     public String direccion;
-    public String ministerio;    // por el FK ministerio_id en persona
+    public String ministerio;   
     public String fechaNacimiento;
 
     public List<FichaFamiliaDTO> familias;

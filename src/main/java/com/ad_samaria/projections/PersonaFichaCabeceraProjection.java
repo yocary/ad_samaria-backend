@@ -7,7 +7,7 @@ package com.ad_samaria.projections;
 
 /**
  *
- * @author Pablo
+ * @author Yocary
  */
 public interface PersonaFichaCabeceraProjection {
 

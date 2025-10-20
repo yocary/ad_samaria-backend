@@ -6,13 +6,15 @@
 package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
+import com.ad_samaria.dto.RolSistemaDTO;
 import com.ad_samaria.models.RolSistema;
+import java.util.List;
 
 /**
  *
  * @author Yocary
  */
 public interface RolSistemaSvc extends CommonSvc<RolSistema> {
-    
-}
 
+    List<RolSistemaDTO> listar();
+}

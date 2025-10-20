@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 /**
  *
- * @author Pablo
+ * @author Yocary
  */
 public class FichaLiderazgoDTO {
 
