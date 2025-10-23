@@ -15,5 +15,5 @@ import lombok.Data;
 public class AgregarMiembroRequest {
 
     private Long personaId;
-    private Short rolFamId;
+    private Short rolId;
 }
