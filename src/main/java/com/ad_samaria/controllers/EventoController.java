@@ -11,9 +11,8 @@ import com.ad_samaria.dto.EventoItemDTO;
 import com.ad_samaria.models.Evento;
 import com.ad_samaria.services.EventoSvc;
 import com.ad_samaria.validator.EventoValidator;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeParseException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -46,13 +45,10 @@ public class EventoController extends CommonController<Evento, EventoSvc, Evento
         if (req.getNombre() == null || req.getNombre().trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         try {
-            Date fecha = null;
-            if (req.getFecha() != null && !req.getFecha().trim().isEmpty()) {
-                // Convertir String -> LocalDate -> Date
-                LocalDate localDate = LocalDate.parse(req.getFecha());
-                fecha = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date fecha = req.getFecha() != null ? sdf.parse(req.getFecha()) : null;
 
             service.crearEvento(
                     liderazgoId,
@@ -61,7 +57,8 @@ public class EventoController extends CommonController<Evento, EventoSvc, Evento
                     req.getDescripcion()
             );
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (DateTimeParseException e) {
+
+        } catch (ParseException e) {
             return ResponseEntity.badRequest().build();
         }
     }
