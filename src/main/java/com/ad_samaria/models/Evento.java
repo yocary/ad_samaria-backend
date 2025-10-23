@@ -29,8 +29,8 @@ public class Evento implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "grupo_id", nullable = false)
-    private Long grupoId;
+    @Column(name = "liderazgo_id", nullable = false)
+    private Long liderazgoId;
 
     @Column(name = "nombre", nullable = false, length = 140)
     private String nombre;
@@ -51,14 +51,6 @@ public class Evento implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getGrupoId() {
-        return grupoId;
-    }
-
-    public void setGrupoId(Long grupoId) {
-        this.grupoId = grupoId;
     }
 
     public String getNombre() {
@@ -91,6 +83,14 @@ public class Evento implements Serializable {
 
     public void setAvisoWhatsapp(Boolean avisoWhatsapp) {
         this.avisoWhatsapp = avisoWhatsapp;
+    }
+
+    public Long getLiderazgoId() {
+        return liderazgoId;
+    }
+
+    public void setLiderazgoId(Long liderazgoId) {
+        this.liderazgoId = liderazgoId;
     }
 
 }

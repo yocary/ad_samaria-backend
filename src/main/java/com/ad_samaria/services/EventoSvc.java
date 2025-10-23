@@ -6,12 +6,17 @@
 package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
+import com.ad_samaria.dto.EventoItemDTO;
 import com.ad_samaria.models.Evento;
+import java.util.List;
 
 /**
  *
  * @author Yocary
  */
 public interface EventoSvc extends CommonSvc<Evento> {
-    
+
+    List<EventoItemDTO> listarEventos(Long liderazgoId);
+
+    Evento crearEvento(Long liderazgoId, String nombre, java.util.Date fecha, String descripcion);
 }

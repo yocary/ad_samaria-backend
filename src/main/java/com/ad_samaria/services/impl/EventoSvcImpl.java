@@ -6,10 +6,18 @@
 package com.ad_samaria.services.impl;
 
 import com.ad_samaria.commons.CommonSvcImpl;
+import com.ad_samaria.dto.EventoItemDTO;
 import com.ad_samaria.models.Evento;
 import com.ad_samaria.repositories.EventoRepository;
+import com.ad_samaria.repositories.LiderazgoRepository;
 import com.ad_samaria.services.EventoSvc;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -18,4 +26,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class EventoSvcImpl extends CommonSvcImpl<Evento, EventoRepository> implements EventoSvc {
 
+    @Autowired
+    private LiderazgoRepository liderazgoRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EventoItemDTO> listarEventos(Long liderazgoId) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        return repository.findByLiderazgoIdOrderByFechaDesc(liderazgoId)
+                .stream()
+                .map(e -> new EventoItemDTO(
+                e.getId(),
+                e.getNombre(),
+                e.getFecha() != null ? fmt.format(e.getFecha()) : null,
+                e.getDescripcion()
+        ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public Evento crearEvento(Long liderazgoId, String nombre, Date fecha, String descripcion) {
+        Evento e = new Evento();
+        e.setLiderazgoId(liderazgoId);
+        e.setNombre(nombre);
+        e.setFecha(fecha);
+        e.setDescripcion(descripcion);
+        e.setAvisoWhatsapp(Boolean.FALSE);
+        return repository.save(e);
+    }
 }

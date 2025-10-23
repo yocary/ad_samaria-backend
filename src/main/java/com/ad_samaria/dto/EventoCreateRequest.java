@@ -1,0 +1,41 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.ad_samaria.dto;
+
+/**
+ *
+ * @author Yocary
+ */
+public class EventoCreateRequest {
+
+    private String nombre;
+    private String fecha;       // esperado: yyyy-MM-dd
+    private String descripcion; // opcional
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+}
