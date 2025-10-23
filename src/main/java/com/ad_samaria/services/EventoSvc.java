@@ -19,4 +19,8 @@ public interface EventoSvc extends CommonSvc<Evento> {
     List<EventoItemDTO> listarEventos(Long liderazgoId);
 
     Evento crearEvento(Long liderazgoId, String nombre, java.util.Date fecha, String descripcion);
+
+    void guardarObservacion(Long liderazgoId, Long eventoId, String observacion);
+
+    String obtenerObservacion(Long liderazgoId, Long eventoId);
 }

@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,5 +55,23 @@ public class EventoSvcImpl extends CommonSvcImpl<Evento, EventoRepository> imple
         e.setDescripcion(descripcion);
         e.setAvisoWhatsapp(Boolean.FALSE);
         return repository.save(e);
+    }
+
+    @Override
+    @Transactional
+    public void guardarObservacion(Long liderazgoId, Long eventoId, String observacion) {
+        Evento ev = repository.findByIdAndLiderazgoId(eventoId, liderazgoId)
+                .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado para el liderazgo indicado"));
+
+        ev.setDescripcion(observacion != null ? observacion.trim() : null);
+        repository.save(ev);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String obtenerObservacion(Long liderazgoId, Long eventoId) {
+        return repository.findByIdAndLiderazgoId(eventoId, liderazgoId)
+                .map(Evento::getDescripcion)
+                .orElse("");
     }
 }

@@ -8,6 +8,7 @@ package com.ad_samaria.controllers;
 import com.ad_samaria.commons.CommonController;
 import com.ad_samaria.dto.EventoCreateRequest;
 import com.ad_samaria.dto.EventoItemDTO;
+import com.ad_samaria.dto.ObservacionDTO;
 import com.ad_samaria.models.Evento;
 import com.ad_samaria.services.EventoSvc;
 import com.ad_samaria.validator.EventoValidator;
@@ -15,11 +16,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,5 +64,25 @@ public class EventoController extends CommonController<Evento, EventoSvc, Evento
         } catch (ParseException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PutMapping("/{liderazgoId}/{eventoId}/observacion")
+    public ResponseEntity<Void> guardarObservacion(
+            @PathVariable Long liderazgoId,
+            @PathVariable Long eventoId,
+            @RequestBody @Valid ObservacionDTO body
+    ) {
+        service.guardarObservacion(liderazgoId, eventoId, body.getObservacion());
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{liderazgoId}/{eventoId}/observacion")
+    public ResponseEntity<ObservacionDTO> obtenerObservacion(
+            @PathVariable Long liderazgoId,
+            @PathVariable Long eventoId) {
+        String obs = service.obtenerObservacion(liderazgoId, eventoId);
+        ObservacionDTO dto = new ObservacionDTO();
+        dto.setObservacion(obs);
+        return ResponseEntity.ok(dto);
     }
 }
