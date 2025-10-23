@@ -32,7 +32,7 @@ public class EventoSvcImpl extends CommonSvcImpl<Evento, EventoRepository> imple
     @Override
     @Transactional(readOnly = true)
     public List<EventoItemDTO> listarEventos(Long liderazgoId) {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
         return repository.findByLiderazgoIdOrderByFechaDesc(liderazgoId)
                 .stream()
                 .map(e -> new EventoItemDTO(
