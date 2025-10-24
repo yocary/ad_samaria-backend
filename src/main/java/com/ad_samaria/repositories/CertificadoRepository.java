@@ -46,14 +46,14 @@ public interface CertificadoRepository extends CrudRepository<Certificado, Objec
     CertificadoPdfBaseProjection datosPdfPorId(@Param("id") Long id);
 
     @Query(value
-            = "SELECT c.id                                      AS id, "
-            + "       COALESCE((c.observaciones::jsonb)->>'nombreMiembro','') AS miembro, "
-            + "       t.nombre                                 AS tipo, "
-            + "       c.fecha                                   AS fecha "
+            = "SELECT c.id AS id, "
+            + "       COALESCE(CAST(c.observaciones AS JSONB)->>'nombreMiembro', '') AS miembro, "
+            + "       t.nombre AS tipo, "
+            + "       c.fecha AS fecha "
             + "FROM ad_samaria.certificado c "
             + "JOIN ad_samaria.tipo_certificado t ON t.id = c.tipo_id "
             + "WHERE (:q IS NULL "
-            + "   OR COALESCE((c.observaciones::jsonb)->>'nombreMiembro','') ILIKE CONCAT('%', :q, '%') "
+            + "   OR COALESCE(CAST(c.observaciones AS JSONB)->>'nombreMiembro', '') ILIKE CONCAT('%', :q, '%') "
             + "   OR t.nombre ILIKE CONCAT('%', :q, '%')) "
             + "ORDER BY c.fecha DESC, c.id DESC",
             nativeQuery = true)
