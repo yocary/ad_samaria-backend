@@ -5,30 +5,66 @@
  */
 package com.ad_samaria.dto;
 
+import java.util.List;
+
 /**
  *
  * @author Yocary
  */
 public class LoginResponse {
-    private String token;
-    private String nombre;
-    private String rol;
 
-    public LoginResponse(String token, String nombre, String rol) {
+    private String token;
+    private Long usuarioId;
+    private Long personaId;
+    private String username;
+    private List<String> roles;
+
+    public LoginResponse(String token, Long usuarioId, Long personaId, String username, List<String> roles) {
         this.token = token;
-        this.nombre = nombre;
-        this.rol = rol;
+        this.usuarioId = usuarioId;
+        this.personaId = personaId;
+        this.username = username;
+        this.roles = roles;
     }
 
     public String getToken() {
         return token;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public String getRol() {
-        return rol;
+    public Long getUsuarioId() {
+        return usuarioId;
     }
+
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public Long getPersonaId() {
+        return personaId;
+    }
+
+    public void setPersonaId(Long personaId) {
+        this.personaId = personaId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
 }

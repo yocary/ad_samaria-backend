@@ -6,12 +6,23 @@
 package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
+import com.ad_samaria.dto.CambiarPasswordDTO;
+import com.ad_samaria.dto.UsuarioCreateDTO;
+import com.ad_samaria.dto.UsuarioItemDTO;
 import com.ad_samaria.models.Usuario;
+import java.util.List;
 
 /**
  *
  * @author Yocary
  */
 public interface UsuarioSvc extends CommonSvc<Usuario> {
-    
+
+    Usuario crear(UsuarioCreateDTO req);
+
+    List<UsuarioItemDTO> listar();
+
+    String sugerirUsername(Long personaId);
+
+    public void cambiarPassword(CambiarPasswordDTO req);
 }
