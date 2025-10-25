@@ -14,6 +14,7 @@ import com.ad_samaria.models.Usuario;
 import com.ad_samaria.repositories.PersonaRepository;
 import com.ad_samaria.repositories.UsuarioRepository;
 import com.ad_samaria.services.UsuarioSvc;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -99,9 +100,79 @@ public class UsuarioSvcImpl extends CommonSvcImpl<Usuario, UsuarioRepository> im
         Persona p = personaRepo.findById(personaId)
                 .orElseThrow(() -> new EntityNotFoundException("Persona no encontrada"));
 
-        // Siempre usar nombre y apellido para sugerir username
-        String base = (p.getNombres().split(" ")[0] + "." + p.getApellidoPaterno()).toLowerCase();
-        return base.replaceAll("[^a-z0-9.]", "");
+        // Obtener primera letra del nombre
+        String primeraLetraNombre = p.getNombres().trim().substring(0, 1).toLowerCase();
+
+        // Obtener apellido paterno completo
+        String apellidoPaterno = p.getApellidoPaterno().toLowerCase();
+
+        // Obtener primera letra del apellido materno (si existe)
+        String primeraLetraMaterno = "";
+        if (p.getApellidoMaterno() != null && !p.getApellidoMaterno().trim().isEmpty()) {
+            primeraLetraMaterno = p.getApellidoMaterno().trim().substring(0, 1).toLowerCase();
+        }
+
+        // Combinar todo sin puntos
+        String usernameBase = primeraLetraNombre + apellidoPaterno + primeraLetraMaterno;
+
+        // Quitar tildes y caracteres especiales
+        String usernameLimpio = quitarTildesYCaracteresEspeciales(usernameBase);
+
+        // Verificar si ya existe y agregar número secuencial si es necesario
+        return generarUsernameUnico(usernameLimpio, personaId);
+    }
+
+    private String quitarTildesYCaracteresEspeciales(String texto) {
+        if (texto == null) {
+            return "";
+        }
+
+        // Normalizar y quitar tildes
+        String normalized = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        String sinTildes = normalized.replaceAll("[\\u0300-\\u036f]", "");
+
+        // Quitar cualquier caracter que no sea letra o número
+        return sinTildes.replaceAll("[^a-z0-9]", "");
+    }
+
+    private String generarUsernameUnico(String usernameBase, Long personaIdActual) {
+        // Primero verificar si el username base ya existe
+        Optional<Usuario> usuarioExistente = repository.findByUsernameIgnoreCase(usernameBase);
+
+        // Si no existe, usar el base (usando isPresent() en lugar de isEmpty())
+        if (!usuarioExistente.isPresent()) {
+            return usernameBase;
+        }
+
+        // Si existe, verificar si es para la misma persona (caso de edición)
+        // Esto depende de cómo esté mapeada la relación en tu clase Usuario
+        Usuario usuario = usuarioExistente.get();
+
+        // Si tu clase Usuario tiene una referencia directa a Persona, sería:
+        // if (usuario.getPersona() != null && usuario.getPersona().getId().equals(personaIdActual))
+        // Si no tiene referencia directa, verifica por el método existsByPersonaId
+        if (repository.existsByPersonaId(personaIdActual)) {
+            // Si esta persona ya tiene un usuario, mantener el username actual
+            return usernameBase;
+        }
+
+        // Si existe para otra persona, buscar variantes con números
+        int contador = 1;
+        String usernamePropuesto;
+
+        do {
+            usernamePropuesto = usernameBase + contador;
+            Optional<Usuario> usuarioConNumero = repository.findByUsernameIgnoreCase(usernamePropuesto);
+
+            // Si no existe este username con número
+            if (!usuarioConNumero.isPresent()) {
+                break;
+            }
+
+            contador++;
+        } while (contador < 1000); // Límite por seguridad
+
+        return usernamePropuesto;
     }
 
     public void cambiarPassword(CambiarPasswordDTO req) {
