@@ -32,4 +32,7 @@ public interface CategoriaRepository extends CrudRepository<Categoria, Object> {
     List<Categoria> findByTipoNombre(String tipoNombre);
 
     boolean existsByNombreIgnoreCaseAndAplicaA(String nombre, Long tipoMovimientoId);
+
+    boolean existsByNombreIgnoreCaseAndAplicaAAndIdNot(
+            String nombre, Long tipoMovimientoId, Long excludeId);
 }

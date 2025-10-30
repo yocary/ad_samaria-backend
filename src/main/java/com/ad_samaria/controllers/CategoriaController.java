@@ -6,6 +6,7 @@
 package com.ad_samaria.controllers;
 
 import com.ad_samaria.commons.CommonController;
+import com.ad_samaria.dto.ActualizarCategoriaReq;
 import com.ad_samaria.dto.CategoriaMiniRes;
 import com.ad_samaria.dto.CrearCategoriaReq;
 import com.ad_samaria.dto.TipoMovimientoMini;
@@ -14,8 +15,11 @@ import com.ad_samaria.services.CategoriaSvc;
 import com.ad_samaria.validator.CategoriaValidator;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,16 +38,27 @@ public class CategoriaController extends CommonController<Categoria, CategoriaSv
         return ResponseEntity.ok(service.listarPorTipoCategoria(tipo));
     }
 
-    // ▼ NUEVO: obtener lista para el <select> de tipos
     @GetMapping("/tipos-movimiento")
     public ResponseEntity<List<TipoMovimientoMini>> getTiposMovimiento() {
         return ResponseEntity.ok(service.listarTipos());
     }
 
-    // ▼ NUEVO: crear categoría
     @PostMapping("/categorias")
     public ResponseEntity<CategoriaMiniRes> crearCategoria(@RequestBody CrearCategoriaReq req) {
         CategoriaMiniRes out = service.crearCategoria(req);
         return ResponseEntity.ok(out);
+    }
+
+    @PutMapping("/categorias/{id}")
+    public ResponseEntity<CategoriaMiniRes> actualizarCategoria(
+            @PathVariable Long id,
+            @RequestBody ActualizarCategoriaReq req) {
+        return ResponseEntity.ok(service.actualizarCategoria(id, req));
+    }
+
+    @DeleteMapping("/categorias/{id}")
+    public ResponseEntity<Void> eliminarCategoria(@PathVariable Long id) {
+        service.eliminarCategoria(id);
+        return ResponseEntity.noContent().build();
     }
 }

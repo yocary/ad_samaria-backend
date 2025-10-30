@@ -6,6 +6,7 @@
 package com.ad_samaria.services.impl;
 
 import com.ad_samaria.commons.CommonSvcImpl;
+import com.ad_samaria.dto.ActualizarCategoriaReq;
 import com.ad_samaria.dto.CategoriaMiniRes;
 import com.ad_samaria.dto.CrearCategoriaReq;
 import com.ad_samaria.dto.TipoMovimientoMini;
@@ -98,4 +99,45 @@ public class CategoriaSvcImpl extends CommonSvcImpl<Categoria, CategoriaReposito
         return new CategoriaMiniRes(saved.getId(), saved.getNombre(), tipo.getNombre());
     }
 
+    @Override
+    @Transactional
+    public CategoriaMiniRes actualizarCategoria(Long id, ActualizarCategoriaReq req) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id requerido");
+        }
+        if (req == null || req.nombre == null || req.nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        }
+        if (req.tipoMovimientoId == null) {
+            throw new IllegalArgumentException("El tipo de movimiento es obligatorio");
+        }
+
+        Categoria c = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+
+        // Validar tipo
+        TipoMovimiento tipo = tipoRepo.findById(req.tipoMovimientoId)
+                .orElseThrow(() -> new IllegalArgumentException("Tipo de movimiento inválido"));
+
+        // Evitar duplicados (mismo nombre + tipo, distinto id)
+        if (repository.existsByNombreIgnoreCaseAndAplicaAAndIdNot(
+                req.nombre.trim(), req.tipoMovimientoId, id)) {
+            throw new IllegalArgumentException("Ya existe una categoría con ese nombre para el tipo seleccionado");
+        }
+
+        c.setNombre(req.nombre.trim());
+        c.setAplicaA(tipo.getId());
+        Categoria saved = repository.save(c);
+
+        return new CategoriaMiniRes(saved.getId(), saved.getNombre(), tipo.getNombre());
+    }
+
+    @Override
+    @Transactional
+    public void eliminarCategoria(Long id) {
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("Categoría no encontrada");
+        }
+        repository.deleteById(id);
+    }
 }
