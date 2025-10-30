@@ -17,4 +17,8 @@ public interface MovimientoSvc extends CommonSvc<Movimiento> {
 
     public Long crearDesdeDTO(Long tesoreriaId, CrearMovimientoReq dto);
 
+    public void eliminar(Long tesoreriaId, Long movimientoId);
+
+    public void actualizarDesdeDTO(Long tesoreriaId, Long movimientoId, CrearMovimientoReq req);
+
 }

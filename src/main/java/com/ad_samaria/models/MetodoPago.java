@@ -24,16 +24,16 @@ public class MetodoPago implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Short id;
+    private Long id;
 
     @Column(name = "nombre", unique = true, nullable = false, length = 30)
     private String nombre;
 
-    public Short getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
