@@ -6,16 +6,15 @@
 package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
-import com.ad_samaria.models.Categoria;
-import com.ad_samaria.projections.CategoriaMini;
-import java.util.List;
+import com.ad_samaria.dto.CrearMovimientoReq;
+import com.ad_samaria.models.Movimiento;
 
 /**
  *
  * @author Yocary
  */
-public interface CategoriaSvc extends CommonSvc<Categoria> {
+public interface MovimientoSvc extends CommonSvc<Movimiento> {
 
-    public List<CategoriaMini> listarPorTipo(String tipo, Long tipoId);
+    public Long crearDesdeDTO(Long tesoreriaId, CrearMovimientoReq dto);
 
 }

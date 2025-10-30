@@ -2,6 +2,7 @@ package com.ad_samaria.utils.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -50,12 +51,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/login").permitAll()
-                .antMatchers("/error").permitAll()
-                .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v2/api-docs/**", "/persona/**", "/usuario/**",
-                        "/auth/**","/rol-sistema/**","/persona-rol/**",
+                // Público
+                .antMatchers("/auth/login", "/error").permitAll()
+                .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**",
                         "/swagger-resources/**", "/webjars/**", "/configuration/ui", "/configuration/security").permitAll()
-                .antMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // Usuario/Persona/Roles (solo ADMIN)
+                .antMatchers("/usuario/**", "/persona/**", "/rol-sistema/**", "/persona-rol/**", "/tesoreria/**", "/movimiento/**")
+                .hasAnyAuthority("ROLE_LÍDER", "ROLE_ADMINISTRADOR")
+                // Quita cualquier .permitAll() que deje expuesto dominio crítico
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

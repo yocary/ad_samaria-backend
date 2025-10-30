@@ -46,13 +46,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         List<String> roles = jdbc.query(
-                "SELECT 'ROLE_' || upper(r.nombre) "
+                "SELECT DISTINCT 'ROLE_' || UPPER(r.nombre) "
                 + "FROM ad_samaria.persona_rol_sistema prs "
-                + "JOIN ad_samaria.rol_sistema r ON r.id = prs.id "
-                + "WHERE prs.persona_id = ?",
+                + "JOIN ad_samaria.rol_sistema r ON r.id = prs.rol_id "
+                + // ← corrección aquí
+                "WHERE prs.persona_id = ? AND prs.activo = true",
                 new Object[]{u.getPersonaId()},
                 (rs, i) -> rs.getString(1)
         );
+
         if (roles.isEmpty()) {
             roles = Collections.singletonList("ROLE_USER");
         }
