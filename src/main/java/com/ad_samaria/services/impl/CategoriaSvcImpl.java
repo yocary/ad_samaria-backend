@@ -6,14 +6,21 @@
 package com.ad_samaria.services.impl;
 
 import com.ad_samaria.commons.CommonSvcImpl;
+import com.ad_samaria.dto.CategoriaMiniRes;
+import com.ad_samaria.dto.CrearCategoriaReq;
+import com.ad_samaria.dto.TipoMovimientoMini;
 import com.ad_samaria.models.Categoria;
+import com.ad_samaria.models.TipoMovimiento;
 import com.ad_samaria.projections.CategoriaMini;
 import com.ad_samaria.repositories.CategoriaRepository;
+import com.ad_samaria.repositories.TipoMovimientoRepository;
 import com.ad_samaria.services.CategoriaSvc;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -24,6 +31,9 @@ public class CategoriaSvcImpl extends CommonSvcImpl<Categoria, CategoriaReposito
 
     @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    private TipoMovimientoRepository tipoRepo;
 
     private Long resolveTipoId(String tipo, Long tipoId) {
         if (tipoId != null) {
@@ -41,6 +51,51 @@ public class CategoriaSvcImpl extends CommonSvcImpl<Categoria, CategoriaReposito
     public List<CategoriaMini> listarPorTipo(String tipo, Long tipoId) {
         Long id = resolveTipoId(tipo, tipoId);
         return repository.listarPorTipo(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TipoMovimientoMini> listarTipos() {
+        return tipoRepo.findAllByOrderByNombreAsc()
+                .stream()
+                .map(t -> new TipoMovimientoMini(t.getId(), t.getNombre()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoriaMiniRes> listarPorTipoCategoria(String tipoNombre) {
+        return repository.findByTipoNombre(tipoNombre)
+                .stream()
+                .map(c -> {
+                    String tipo = tipoRepo.findById(c.getAplicaA()).map(TipoMovimiento::getNombre).orElse("");
+                    return new CategoriaMiniRes(c.getId(), c.getNombre(), tipo);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public CategoriaMiniRes crearCategoria(CrearCategoriaReq req) {
+        if (req == null || req.nombre == null || req.nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        }
+        if (req.tipoMovimientoId == null) {
+            throw new IllegalArgumentException("El tipo de movimiento es obligatorio");
+        }
+
+        TipoMovimiento tipo = tipoRepo.findById(req.tipoMovimientoId)
+                .orElseThrow(() -> new IllegalArgumentException("Tipo de movimiento inválido"));
+
+        if (repository.existsByNombreIgnoreCaseAndAplicaA(req.nombre.trim(), req.tipoMovimientoId)) {
+            throw new IllegalArgumentException("Ya existe una categoría con ese nombre para el tipo seleccionado");
+        }
+
+        Categoria c = new Categoria();
+        c.setNombre(req.nombre.trim());
+        c.setAplicaA(tipo.getId());
+        Categoria saved = repository.save(c);
+        return new CategoriaMiniRes(saved.getId(), saved.getNombre(), tipo.getNombre());
     }
 
 }

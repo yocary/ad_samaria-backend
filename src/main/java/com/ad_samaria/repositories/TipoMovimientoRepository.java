@@ -6,6 +6,7 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.TipoMovimiento;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -21,4 +22,9 @@ public interface TipoMovimientoRepository extends CrudRepository<TipoMovimiento,
 
     @Query("SELECT t.id FROM TipoMovimiento t WHERE LOWER(t.nombre) LIKE LOWER(CONCAT(:nombre, '%'))")
     Optional<Long> findIdByNombreILike(@Param("nombre") String nombre);
+
+    List<TipoMovimiento> findAllByOrderByNombreAsc();
+
+    @Query("select t from TipoMovimiento t where lower(t.nombre)=lower(?1)")
+    Optional<TipoMovimiento> findByNombreIgnoreCase(String nombre);
 }

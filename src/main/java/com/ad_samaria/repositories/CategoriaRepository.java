@@ -27,4 +27,9 @@ public interface CategoriaRepository extends CrudRepository<Categoria, Object> {
             + "ORDER BY c.nombre ASC",
             nativeQuery = true)
     List<CategoriaMini> listarPorTipo(@Param("tipoId") Long tipoId);
+
+    @Query("select c from Categoria c join TipoMovimiento t on t.id=c.aplicaA where lower(t.nombre)=lower(?1) order by c.nombre asc")
+    List<Categoria> findByTipoNombre(String tipoNombre);
+
+    boolean existsByNombreIgnoreCaseAndAplicaA(String nombre, Long tipoMovimientoId);
 }

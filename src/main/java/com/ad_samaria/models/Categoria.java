@@ -30,7 +30,7 @@ public class Categoria implements Serializable {
     private String nombre;
 
     @Column(name = "aplica_a", nullable = false)
-    private Short aplicaA;
+    private Long aplicaA;
 
     public Long getId() {
         return id;
@@ -48,11 +48,11 @@ public class Categoria implements Serializable {
         this.nombre = nombre;
     }
 
-    public Short getAplicaA() {
+    public Long getAplicaA() {
         return aplicaA;
     }
 
-    public void setAplicaA(Short aplicaA) {
+    public void setAplicaA(Long aplicaA) {
         this.aplicaA = aplicaA;
     }
 
