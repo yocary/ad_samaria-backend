@@ -30,4 +30,7 @@ public interface TesoreriaRepository extends CrudRepository<Tesoreria, Object> {
             + "ORDER BY t.nombre ASC")
     List<Tesoreria> search(@Param("estado") String estado, @Param("q") String q);
 
+    boolean existsByNombreIgnoreCaseAndIdNot(String nombre, Long excludeId);
+
+
 }

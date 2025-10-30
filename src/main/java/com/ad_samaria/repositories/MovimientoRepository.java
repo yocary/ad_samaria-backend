@@ -83,4 +83,6 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Object>
             @Param("ini") LocalDate ini,
             @Param("fin") LocalDate fin
     );
+
+    long countByTesoreriaId(Long tesoreriaId);
 }

@@ -6,19 +6,23 @@
 package com.ad_samaria.controllers;
 
 import com.ad_samaria.commons.CommonController;
+import com.ad_samaria.dto.ActualizarTesoreriaReq;
 import com.ad_samaria.dto.MovimientoRowDTO;
 import com.ad_samaria.dto.ResumenDTO;
 import com.ad_samaria.dto.TesoreriaRowDTO;
 import com.ad_samaria.models.Tesoreria;
 import com.ad_samaria.services.TesoreriaSvc;
 import com.ad_samaria.validator.TesoreriaValidator;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -106,5 +110,27 @@ public class TesoreriaController extends CommonController<Tesoreria, TesoreriaSv
             @RequestParam(value = "periodo", required = false, defaultValue = "mes") String periodo
     ) {
         return service.resumen(tesoreriaId, periodo);
+    }
+
+    @PutMapping("/actualizarTesoreria/{id}")
+    public ResponseEntity<Void> actualizarTesoreria(
+            @PathVariable Long id,
+            @RequestBody ActualizarTesoreriaReq req) {
+        service.actualizarTesoreria(id, req);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/eliminarTesoreria/{id}")
+    public ResponseEntity<?> eliminarTesoreria(@PathVariable Long id) {
+        try {
+            service.eliminarTesoreria(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("message", ex.getMessage()));
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("message", ex.getMessage()));
+        }
     }
 }

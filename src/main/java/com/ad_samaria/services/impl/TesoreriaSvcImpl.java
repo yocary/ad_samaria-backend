@@ -6,6 +6,7 @@
 package com.ad_samaria.services.impl;
 
 import com.ad_samaria.commons.CommonSvcImpl;
+import com.ad_samaria.dto.ActualizarTesoreriaReq;
 import com.ad_samaria.dto.MovimientoRowDTO;
 import com.ad_samaria.dto.ResumenDTO;
 import com.ad_samaria.dto.TesoreriaRowDTO;
@@ -136,5 +137,46 @@ public class TesoreriaSvcImpl extends CommonSvcImpl<Tesoreria, TesoreriaReposito
         LocalDate[] rf = rangoTesoreria(periodo);
         ResumenProjection r = movRepo.resumenTesoreria(tesoreriaId, rf[0], rf[1]);
         return new ResumenDTO(r.getTotalIngresos(), r.getTotalEgresos());
+    }
+
+    @Override
+    public void actualizarTesoreria(Long id, ActualizarTesoreriaReq req) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id requerido");
+        }
+        if (req == null) {
+            throw new IllegalArgumentException("Body requerido");
+        }
+        if (req.nombre == null || req.nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        }
+        if (req.estado == null) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
+
+        Tesoreria t = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tesorería no encontrada"));
+
+        // (opcional) evitar duplicados
+        if (repository.existsByNombreIgnoreCaseAndIdNot(req.nombre.trim(), id)) {
+            throw new IllegalArgumentException("Ya existe una tesorería con ese nombre");
+        }
+
+        t.setNombre(req.nombre.trim());
+        t.setEstado(req.estado); // boolean
+        repository.save(t);
+    }
+
+    @Override
+    public void eliminarTesoreria(Long id) {
+        Tesoreria t = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tesorería no encontrada"));
+
+        long cantMovs = movRepo.countByTesoreriaId(id);
+        if (cantMovs > 0) {
+            throw new IllegalStateException("No se puede eliminar: la tesorería tiene movimientos asociados");
+        }
+
+        repository.deleteById(id);
     }
 }

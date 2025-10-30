@@ -6,6 +6,7 @@
 package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
+import com.ad_samaria.dto.ActualizarTesoreriaReq;
 import com.ad_samaria.dto.MovimientoRowDTO;
 import com.ad_samaria.dto.ResumenDTO;
 import com.ad_samaria.dto.TesoreriaRowDTO;
@@ -25,5 +26,9 @@ public interface TesoreriaSvc extends CommonSvc<Tesoreria> {
     public List<MovimientoRowDTO> listarMovimientos(Long tesoreriaId, String periodo, String q);
 
     public ResumenDTO resumen(Long tesoreriaId, String periodo);
+
+    public void actualizarTesoreria(Long id, ActualizarTesoreriaReq req);
+    
+    public void eliminarTesoreria(Long id);
 
 }
