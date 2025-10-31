@@ -22,12 +22,12 @@ public interface DiezmoRepository extends JpaRepository<Diezmo, Long> {
 
     @Query("SELECT d "
             + "FROM Diezmo d "
-            + "JOIN d.persona p "
+            + "LEFT JOIN d.persona p " // 👈 antes era JOIN
             + "WHERE d.fecha BETWEEN :desde AND :hasta "
             + "  AND ( :q IS NULL OR :q = '' OR "
-            + "        LOWER(COALESCE(p.nombres, '')) LIKE LOWER(CONCAT('%', :q, '%')) OR "
-            + "        LOWER(COALESCE(p.apellidoPaterno, '')) LIKE LOWER(CONCAT('%', :q, '%')) OR "
-            + "        LOWER(COALESCE(p.apellidoMaterno, '')) LIKE LOWER(CONCAT('%', :q, '%')) "
+            + "        LOWER(COALESCE(p.nombres, ''))          LIKE LOWER(CONCAT('%', :q, '%')) OR "
+            + "        LOWER(COALESCE(p.apellidoPaterno, ''))  LIKE LOWER(CONCAT('%', :q, '%')) OR "
+            + "        LOWER(COALESCE(p.apellidoMaterno, ''))  LIKE LOWER(CONCAT('%', :q, '%')) "
             + "      ) "
             + "ORDER BY d.fecha DESC, d.id DESC")
     List<Diezmo> buscarPorRangoYPersona(

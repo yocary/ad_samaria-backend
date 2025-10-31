@@ -31,7 +31,6 @@ public class Diezmo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ⬇️ reemplaza nombre por relación a Persona
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "persona_id", nullable = false)
     private Persona persona;
@@ -44,9 +43,8 @@ public class Diezmo {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
-    private TipoSimple tipo; // Ingreso | Egreso
+    private TipoSimple tipo;
 
-    // getters/setters
     public Long getId() {
         return id;
     }

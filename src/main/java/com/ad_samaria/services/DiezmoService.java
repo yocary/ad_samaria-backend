@@ -31,6 +31,7 @@ public class DiezmoService {
     @Transactional(readOnly = true)
     public GetDiezmosRes listar(String periodo, String q) {
         LocalDate hoy = LocalDate.now();
+
         LocalDate desde;
         LocalDate hasta;
 
@@ -38,7 +39,7 @@ public class DiezmoService {
         switch (per) {
             case "anio": {
                 desde = hoy.withDayOfYear(1);
-                hasta = hoy;
+                hasta = hoy.withDayOfYear(hoy.lengthOfYear()); // último día del año
                 break;
             }
             case "mes_anterior": {
@@ -49,38 +50,41 @@ public class DiezmoService {
             }
             case "todos": {
                 desde = LocalDate.of(1970, 1, 1);
-                hasta = hoy;
+                hasta = hoy; // o el último día del mes actual si prefieres
                 break;
             }
-            default: {
-                // "mes"
+            default: { // "mes"
                 desde = hoy.withDayOfMonth(1);
-                hasta = hoy;
+                hasta = hoy.withDayOfMonth(hoy.lengthOfMonth()); // 👈 mes completo
                 break;
             }
         }
 
         String query = (q == null ? "" : q.trim());
-        List<Diezmo> lista = diezmoRepo.buscarPorRangoYPersona(desde, hasta, query);
 
+        List<Diezmo> lista = diezmoRepo.buscarPorRangoYPersona(desde, hasta, query);
         List<DiezmoRow> rows = lista.stream().map(d -> {
             Persona p = d.getPersona();
             String nombre = construirNombrePersona(p);
             return new DiezmoRow(
-                d.getId(),
-                p.getId(),
-                nombre,
-                d.getCantidad(),
-                d.getFecha(),
-                d.getTipo().name()
+                    d.getId(),
+                    p.getId(),
+                    nombre,
+                    d.getCantidad(),
+                    d.getFecha(),
+                    d.getTipo().name()
             );
         }).collect(Collectors.toList());
 
         BigDecimal totIngresos = diezmoRepo.totalPorTipoYFecha(TipoSimple.Ingreso, desde, hasta);
-        BigDecimal totEgresos  = diezmoRepo.totalPorTipoYFecha(TipoSimple.Egreso,  desde, hasta);
+        BigDecimal totEgresos = diezmoRepo.totalPorTipoYFecha(TipoSimple.Egreso, desde, hasta);
 
-        if (totIngresos == null) totIngresos = BigDecimal.ZERO;
-        if (totEgresos  == null) totEgresos  = BigDecimal.ZERO;
+        if (totIngresos == null) {
+            totIngresos = BigDecimal.ZERO;
+        }
+        if (totEgresos == null) {
+            totEgresos = BigDecimal.ZERO;
+        }
 
         return new GetDiezmosRes(rows, new GetDiezmosRes.Totales(totIngresos, totEgresos));
     }
@@ -98,7 +102,7 @@ public class DiezmoService {
     public void actualizar(Long id, CrearDiezmoReq req) {
         validar(req);
         Diezmo d = diezmoRepo.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Diezmo no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Diezmo no encontrado"));
         mapear(d, req);
         diezmoRepo.save(d);
     }
@@ -112,7 +116,6 @@ public class DiezmoService {
     }
 
     /* ================== helpers ================== */
-
     private void validar(CrearDiezmoReq req) {
         if (req == null) {
             throw new IllegalArgumentException("Solicitud vacía");
@@ -132,13 +135,13 @@ public class DiezmoService {
 
         // valida existencia de persona
         personaRepo.findById(req.personaId)
-            .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada"));
     }
 
     private void mapear(Diezmo d, CrearDiezmoReq req) {
         // Version compatible con Spring Data "clásico"
         Persona persona = personaRepo.findById(req.personaId)
-            .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada"));
         d.setPersona(persona);
         d.setCantidad(req.cantidad);
         d.setFecha(req.fecha);
@@ -146,9 +149,9 @@ public class DiezmoService {
     }
 
     private String construirNombrePersona(Persona p) {
-        String nombres          = p.getNombres() != null ? p.getNombres().trim() : "";
-        String apellidoPaterno  = p.getApellidoPaterno() != null ? p.getApellidoPaterno().trim() : "";
-        String apellidoMaterno  = p.getApellidoMaterno() != null ? p.getApellidoMaterno().trim() : "";
+        String nombres = p.getNombres() != null ? p.getNombres().trim() : "";
+        String apellidoPaterno = p.getApellidoPaterno() != null ? p.getApellidoPaterno().trim() : "";
+        String apellidoMaterno = p.getApellidoMaterno() != null ? p.getApellidoMaterno().trim() : "";
         String full = (nombres + " " + apellidoPaterno + " " + apellidoMaterno).trim();
         return full.isEmpty() ? ("ID:" + p.getId()) : full;
     }
