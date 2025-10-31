@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="finanzas_general" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2c854e86-0700-41b8-9b1a-222d26b30ff4">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="TITULO_IGLESIA" class="java.lang.String"/>
+	<parameter name="TITULO_REPORTE" class="java.lang.String"/>
+	<parameter name="MES_TEXTO" class="java.lang.String"/>
+	<parameter name="TOTAL_INGRESOS" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL_EGRESOS" class="java.math.BigDecimal"/>
+	<parameter name="SALDO" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL_EN_LETRAS" class="java.lang.String"/>
+	<field name="concepto" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="monto" class="java.math.BigDecimal"/>
+	<field name="fecha" class="java.time.LocalDate"/>
+	<title>
+		<band height="88">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="25" uuid="8ec0cf9e-2ade-4fce-a3e0-ea555f75d451"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITULO_IGLESIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="555" height="25" uuid="592bc441-e838-4880-bca3-16e56ad331f4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITULO_REPORTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="58" width="555" height="20" uuid="24674f40-aaed-4f46-ab32-515088bdee43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{MES_TEXTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25">
+			<staticText>
+				<reportElement x="0" y="0" width="415" height="25" uuid="aa159a90-66d0-4ff7-9697-ac489f62b858"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Concepto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="0" width="70" height="25" uuid="03451787-1f76-4734-9dbc-e52ae888bf7c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Egresos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="485" y="0" width="70" height="25" uuid="569aa643-fba7-4881-82f2-66ef4f7426fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ingresos]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement x="0" y="0" width="415" height="20" uuid="5a916134-63a4-4e3e-80a9-16c117470c5c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="415" y="0" width="70" height="20" uuid="5b47e9c4-ded2-4d60-af9b-83e6d5fcc017"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Egreso".equalsIgnoreCase($F{tipo}) ? $F{monto} : null]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="485" y="0" width="70" height="20" uuid="369df36e-dad2-4b74-86cd-01f117664327"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Ingreso".equalsIgnoreCase($F{tipo}) ? $F{monto} : null]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="500">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="345" y="10" width="130" height="20" uuid="76794258-bc7f-4ac7-be1d-5bb246f352fa"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total ingresos:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="485" y="10" width="70" height="20" uuid="450c49eb-b7ff-40bd-8f7f-56bf34ca1834"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{TOTAL_INGRESOS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="345" y="35" width="130" height="20" uuid="f019d87b-b546-4deb-b611-e0a6b0a8482b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total egresos:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="485" y="35" width="70" height="20" uuid="56a77f3e-7776-4d9d-ac13-f02c9a16fc67"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{TOTAL_EGRESOS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="295" y="60" width="178" height="20" uuid="c128f5e9-a1c9-4fd0-be3f-42b6fb0fef32"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo positivo a caja general:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="485" y="60" width="70" height="20" uuid="83e32d9f-530a-44d9-ba35-3cbb352463b2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{SALDO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="165" width="120" height="20" uuid="49f1368a-f0bc-47f9-bb1a-1f4cd28e171c"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total en letras:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="165" width="435" height="20" uuid="1968deb0-b9c4-4b29-8344-740a89cd27cc"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{TOTAL_EN_LETRAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="369" width="240" height="15" uuid="544043ba-9f34-4d10-9d26-c15de9d763c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Carlos Abraham Hernández Caal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="384" width="240" height="15" uuid="c5b3ea62-836c-46fd-a97f-3ebfd17d2a41"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Contador]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="369" width="240" height="15" uuid="f80de56e-eb32-420a-8055-346f6a4d8ba2"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Juan Carlos Us Santiago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="384" width="240" height="15" uuid="ec66290f-4467-480a-b3f7-10835b74ac42"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Diácono]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="473" width="240" height="15" uuid="592bc441-e838-4880-bca3-16e56ad331f4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Immer Adín García Castro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="485" width="240" height="15" uuid="24674f40-aaed-4f46-ab32-515088bdee43"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Pastor Asistente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="473" width="240" height="15" uuid="8ec0cf9e-2ade-4fce-a3e0-ea555f75d451"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Isaías García de la Rosa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="485" width="240" height="15" uuid="03451787-1f76-4734-9dbc-e52ae888bf7c"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Pastor General]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="353" width="240" height="15" uuid="2a63fa53-5d22-4889-a621-f6a7065efd87"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[___________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="353" width="240" height="15" uuid="a758980a-782d-4404-8a29-d338adf12247"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[___________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="458" width="240" height="15" uuid="5ca6f2c9-5944-4b10-8017-e4d2dfcaf30f"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[___________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="458" width="240" height="15" uuid="e203a525-078c-4e53-a59d-c8b0aa0ea3b9"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[___________________________________________]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

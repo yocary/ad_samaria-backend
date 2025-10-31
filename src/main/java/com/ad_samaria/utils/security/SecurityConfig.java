@@ -54,10 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Público
                 .antMatchers("/auth/login", "/error").permitAll()
                 .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**",
-                        "/swagger-resources/**", "/webjars/**", "/configuration/ui", "/configuration/security").permitAll()
+                        "/swagger-resources/**", "/webjars/**", "/configuration/ui", "/configuration/security", "/usuario/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Usuario/Persona/Roles (solo ADMIN)
-                .antMatchers("/usuario/**", "/persona/**", "/rol-sistema/**", "/persona-rol/**", "/tesoreria/**", "/movimiento/**", "/diezmos/**")
+                .antMatchers("/persona/**", "/rol-sistema/**", "/persona-rol/**", "/tesoreria/**", "/movimiento/**", "/diezmos/**")
                 .hasAnyAuthority("ROLE_LÍDER", "ROLE_ADMINISTRADOR")
                 // Quita cualquier .permitAll() que deje expuesto dominio crítico
                 .anyRequest().authenticated()

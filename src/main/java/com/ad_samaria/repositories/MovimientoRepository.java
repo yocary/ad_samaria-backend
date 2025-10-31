@@ -85,4 +85,52 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Object>
     );
 
     long countByTesoreriaId(Long tesoreriaId);
+
+    @Query(" select m\n"
+            + "      from Movimiento m\n"
+            + "      where m.tesoreriaId = :tesId\n"
+            + "        and m.fecha between :desde and :hasta\n"
+            + "      order by m.fecha asc, m.id asc"
+    )
+    List<Movimiento> findByTesoreriaAndRango(
+            @Param("tesId") Long tesoreriaId,
+            @Param("desde") LocalDate desde,
+            @Param("hasta") LocalDate hasta);
+
+    @Query(value = "SELECT \n"
+            + "            m.concepto AS concepto,\n"
+            + "            tm.nombre AS tipo,\n"
+            + "            c.nombre AS categoria,\n"
+            + "            m.cantidad AS monto, \n"
+            + "            m.fecha AS fecha\n"
+            + "        FROM ad_samaria.movimiento m\n"
+            + "        JOIN ad_samaria.tipo_movimiento tm ON tm.id = m.tipo_id\n"
+            + "        JOIN ad_samaria.categoria c ON c.id = m.categoria_id\n"
+            + "        WHERE m.tesoreria_id = :tesId\n"
+            + "          AND m.fecha BETWEEN :desde AND :hasta\n"
+            + "        ORDER BY m.fecha ASC, m.id ASC", nativeQuery = true)
+    List<Object[]> findMovimientosConNombres(
+            @Param("tesId") Long tesoreriaId,
+            @Param("desde") LocalDate desde,
+            @Param("hasta") LocalDate hasta);
+
+    @Query(value
+            = "SELECT "
+            + "  t.nombre            AS tesoreria, "
+            + "  m.concepto          AS concepto, "
+            + "  tm.nombre           AS tipo, "
+            + "  c.nombre            AS categoria, "
+            + "  m.cantidad          AS cantidad, "
+            + "  m.fecha             AS fecha "
+            + "FROM ad_samaria.movimiento m "
+            + "JOIN ad_samaria.tesoreria       t  ON t.id  = m.tesoreria_id "
+            + "JOIN ad_samaria.tipo_movimiento tm ON tm.id = m.tipo_id "
+            + "LEFT JOIN ad_samaria.categoria  c  ON c.id  = m.categoria_id "
+            + "WHERE m.fecha BETWEEN :desde AND :hasta "
+            + "ORDER BY m.fecha ASC, m.id ASC",
+            nativeQuery = true)
+    List<Object[]> findMovimientosConNombresTodas(
+            @Param("desde") LocalDate desde,
+            @Param("hasta") LocalDate hasta);
+
 }
