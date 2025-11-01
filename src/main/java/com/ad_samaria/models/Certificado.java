@@ -74,5 +74,4 @@ public class Certificado implements Serializable {
     public void setObservaciones(Map<String, Object> observaciones) {
         this.observaciones = observaciones;
     }
-
 }

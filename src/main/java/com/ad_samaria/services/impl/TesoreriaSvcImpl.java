@@ -18,6 +18,7 @@ import com.ad_samaria.repositories.TesoreriaRepository;
 import com.ad_samaria.services.TesoreriaSvc;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,23 +56,23 @@ public class TesoreriaSvcImpl extends CommonSvcImpl<Tesoreria, TesoreriaReposito
         return repository.save(t);
     }
 
-    private LocalDate[] rango(String periodo) {
-        LocalDate hoy = LocalDate.now(ZoneId.of("America/Guatemala"));
-        switch (periodo == null ? "mes" : periodo) {
-            case "mes_anterior":
-                LocalDate iniMA = hoy.minusMonths(1).withDayOfMonth(1);
-                LocalDate finMA = iniMA.withDayOfMonth(iniMA.lengthOfMonth());
-                return new LocalDate[]{iniMA, finMA};
-            case "anio":
-                return new LocalDate[]{hoy.withDayOfYear(1), hoy.withMonth(12).withDayOfMonth(31)};
-            case "todos":
-                return new LocalDate[]{LocalDate.of(2000, 1, 1), hoy.plusYears(50)};
-            default: // "mes"
-                LocalDate ini = hoy.withDayOfMonth(1);
-                LocalDate fin = hoy.withDayOfMonth(hoy.lengthOfMonth());
-                return new LocalDate[]{ini, fin};
-        }
-    }
+//    private LocalDate[] rango(String periodo) {
+//        LocalDate hoy = LocalDate.now(ZoneId.of("America/Guatemala"));
+//        switch (periodo == null ? "mes" : periodo) {
+//            case "mes_anterior":
+//                LocalDate iniMA = hoy.minusMonths(1).withDayOfMonth(1);
+//                LocalDate finMA = iniMA.withDayOfMonth(iniMA.lengthOfMonth());
+//                return new LocalDate[]{iniMA, finMA};
+//            case "anio":
+//                return new LocalDate[]{hoy.withDayOfYear(1), hoy.withMonth(12).withDayOfMonth(31)};
+//            case "todos":
+//                return new LocalDate[]{LocalDate.of(2000, 1, 1), hoy.plusYears(50)};
+//            default: // "mes"
+//                LocalDate ini = hoy.withDayOfMonth(1);
+//                LocalDate fin = hoy.withDayOfMonth(hoy.lengthOfMonth());
+//                return new LocalDate[]{ini, fin};
+//        }
+//    }
 
     @Override
     public List<TesoreriaRowDTO> listar(String estado, String q, String periodo) {
@@ -80,10 +81,13 @@ public class TesoreriaSvcImpl extends CommonSvcImpl<Tesoreria, TesoreriaReposito
                 estado == null ? "activas" : estado,
                 (q == null || q.trim().isEmpty()) ? null : q.trim());
 
-        // 2) totales por período
+        // 2) totales por período - usar fechas por defecto en lugar de null
         LocalDate[] r = rango(periodo);
+        LocalDate desde = r[0] != null ? r[0] : LocalDate.of(2020, 1, 1);
+        LocalDate hasta = r[1] != null ? r[1] : LocalDate.now().plusYears(1);
+
         Map<Long, BigDecimal[]> totales = new HashMap<>();
-        for (Object[] row : movRepo.totalesPorTesoreriaEntre(r[0], r[1])) {
+        for (Object[] row : movRepo.totalesPorTesoreriaEntre(desde, hasta)) {
             Long tesId = ((Number) row[0]).longValue();
             BigDecimal ing = (BigDecimal) row[1];
             BigDecimal egr = (BigDecimal) row[2];
@@ -98,6 +102,36 @@ public class TesoreriaSvcImpl extends CommonSvcImpl<Tesoreria, TesoreriaReposito
             out.add(new TesoreriaRowDTO(t.getId(), t.getNombre(), t.getEstado(), te[0], te[1]));
         }
         return out;
+    }
+
+// Método rango actualizado para no devolver null
+    private LocalDate[] rango(String periodo) {
+        LocalDate desde, hasta;
+        YearMonth ahora = YearMonth.now();
+
+        switch (periodo) {
+            case "mes":
+                desde = ahora.atDay(1);
+                hasta = ahora.plusMonths(1).atDay(1);
+                break;
+            case "mes_anterior":
+                YearMonth prev = ahora.minusMonths(1);
+                desde = prev.atDay(1);
+                hasta = ahora.atDay(1);
+                break;
+            case "anio":
+                desde = LocalDate.of(LocalDate.now().getYear(), 1, 1);
+                hasta = LocalDate.of(LocalDate.now().getYear() + 1, 1, 1);
+                break;
+            case "todos":
+                desde = LocalDate.of(2020, 1, 1);
+                hasta = LocalDate.now().plusYears(1);
+                break;
+            default:
+                desde = ahora.atDay(1);
+                hasta = ahora.plusMonths(1).atDay(1);
+        }
+        return new LocalDate[]{desde, hasta};
     }
 
     private LocalDate[] rangoTesoreria(String periodo) {

@@ -5,6 +5,8 @@
  */
 package com.ad_samaria.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 /**
  *
  * @author Yocary
@@ -13,4 +15,8 @@ public class ActualizarCategoriaReq {
 
     public String nombre;
     public Long tipoMovimientoId;
+    
+    @JsonAlias({"finanzas_generales", "finanzasGenerales"})
+    public Boolean finanzasGenerales;
+
 }

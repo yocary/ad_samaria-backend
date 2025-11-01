@@ -32,6 +32,9 @@ public class Categoria implements Serializable {
     @Column(name = "aplica_a", nullable = false)
     private Long aplicaA;
 
+    @Column(name = "finanzas_generales", nullable = false)
+    private Boolean finanzasGenerales = Boolean.FALSE;
+
     public Long getId() {
         return id;
     }
@@ -54,6 +57,14 @@ public class Categoria implements Serializable {
 
     public void setAplicaA(Long aplicaA) {
         this.aplicaA = aplicaA;
+    }
+
+    public Boolean getFinanzasGenerales() {
+        return finanzasGenerales;
+    }
+
+    public void setFinanzasGenerales(Boolean finanzasGenerales) {
+        this.finanzasGenerales = finanzasGenerales;
     }
 
 }

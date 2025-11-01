@@ -7,6 +7,7 @@ package com.ad_samaria.controllers;
 
 import com.ad_samaria.commons.CommonController;
 import com.ad_samaria.dto.CrearMovimientoReq;
+import com.ad_samaria.dto.MovimientosGeneralesRes;
 import com.ad_samaria.models.Movimiento;
 import com.ad_samaria.projections.CategoriaMini;
 import com.ad_samaria.services.CategoriaSvc;
@@ -73,6 +74,15 @@ public class MovimientoController extends CommonController<Movimiento, Movimient
     ) {
         service.actualizarDesdeDTO(tesoreriaId, movimientoId, req);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/movimientos-generales")
+    public ResponseEntity<MovimientosGeneralesRes> getMovimientosGenerales(
+            @RequestParam(defaultValue = "mes") String periodo,
+            @RequestParam(required = false) String q,
+            @RequestParam(name = "mes", required = false) String mesISO
+    ) {
+        return ResponseEntity.ok(service.obtenerMovimientosGenerales(periodo, q, mesISO));
     }
 
 }

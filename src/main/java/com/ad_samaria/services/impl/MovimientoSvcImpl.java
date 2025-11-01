@@ -7,9 +7,14 @@ package com.ad_samaria.services.impl;
 
 import com.ad_samaria.commons.CommonSvcImpl;
 import com.ad_samaria.dto.CrearMovimientoReq;
+import com.ad_samaria.dto.MovimientosGeneralesItem;
+import com.ad_samaria.dto.MovimientosGeneralesRes;
+import com.ad_samaria.dto.MovimientosGeneralesTotales;
 import com.ad_samaria.models.Categoria;
 import com.ad_samaria.models.Movimiento;
 import com.ad_samaria.models.Persona;
+import com.ad_samaria.projections.MovimientoGeneralProjection;
+import com.ad_samaria.projections.TotalesGeneralesProjection;
 import com.ad_samaria.repositories.CategoriaRepository;
 import com.ad_samaria.repositories.MetodoPagoRepository;
 import com.ad_samaria.repositories.MovimientoRepository;
@@ -18,6 +23,9 @@ import com.ad_samaria.repositories.TipoMovimientoRepository;
 import com.ad_samaria.services.MovimientoSvc;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -204,6 +212,76 @@ public class MovimientoSvcImpl extends CommonSvcImpl<Movimiento, MovimientoRepos
         } else {
             m.setPersonaId(null);
         }
+    }
+
+    // MovimientoSvcImpl.java
+    @Override
+    public MovimientosGeneralesRes obtenerMovimientosGenerales(String periodo, String q, String mesISO) {
+        LocalDate desde;
+        LocalDate hasta;
+
+        // 1) Si viene mes=YYYY-MM, priorízalo siempre
+        if (StringUtils.hasText(mesISO)) {
+            YearMonth ym = YearMonth.parse(mesISO); // formato "yyyy-MM"
+            desde = ym.atDay(1);
+            hasta = ym.plusMonths(1).atDay(1); // [desde, hasta)
+        } else {
+            // 2) Fallback por periodo (igual que antes)
+            YearMonth ahora = YearMonth.now();
+            if (!StringUtils.hasText(periodo)) {
+                periodo = "mes";
+            }
+            switch (periodo) {
+                case "mes":
+                    desde = ahora.atDay(1);
+                    hasta = ahora.plusMonths(1).atDay(1);
+                    break;
+                case "mes_anterior":
+                    YearMonth prev = ahora.minusMonths(1);
+                    desde = prev.atDay(1);
+                    hasta = ahora.atDay(1);
+                    break;
+                case "anio":
+                    int y = LocalDate.now().getYear();
+                    desde = LocalDate.of(y, 1, 1);
+                    hasta = LocalDate.of(y + 1, 1, 1);
+                    break;
+                case "todos":
+                default:
+                    desde = LocalDate.of(2020, 1, 1);
+                    hasta = LocalDate.now().plusYears(1);
+                    break;
+            }
+        }
+
+        // Normaliza q
+        if (q != null) {
+            q = q.trim();
+            if (q.isEmpty()) {
+                q = null;
+            }
+        }
+
+        // Consulta y armado de respuesta (SIN CAMBIOS)
+        List<MovimientoGeneralProjection> rows = repository.listarMovimientosGenerales(desde, hasta, q);
+        List<MovimientosGeneralesItem> items = rows.stream()
+                .map(r -> new MovimientosGeneralesItem(
+                r.getTesoreriaId(),
+                r.getTesoreria(),
+                r.getCategoriaId(),
+                r.getCategoria(),
+                r.getTipo(),
+                r.getAmount()
+        ))
+                .collect(Collectors.toList());
+
+        TotalesGeneralesProjection t = repository.totalesMovimientosGenerales(desde, hasta, q);
+        MovimientosGeneralesTotales totales = new MovimientosGeneralesTotales(
+                t != null && t.getIngresos() != null ? t.getIngresos().doubleValue() : 0d,
+                t != null && t.getEgresos() != null ? t.getEgresos().doubleValue() : 0d
+        );
+
+        return new MovimientosGeneralesRes(items, totales);
     }
 
 }

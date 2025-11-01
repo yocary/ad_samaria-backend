@@ -7,6 +7,7 @@ package com.ad_samaria.services;
 
 import com.ad_samaria.commons.CommonSvc;
 import com.ad_samaria.dto.CrearMovimientoReq;
+import com.ad_samaria.dto.MovimientosGeneralesRes;
 import com.ad_samaria.models.Movimiento;
 
 /**
@@ -20,5 +21,7 @@ public interface MovimientoSvc extends CommonSvc<Movimiento> {
     public void eliminar(Long tesoreriaId, Long movimientoId);
 
     public void actualizarDesdeDTO(Long tesoreriaId, Long movimientoId, CrearMovimientoReq req);
+
+    public MovimientosGeneralesRes obtenerMovimientosGenerales(String periodo, String q, String mesISO);
 
 }

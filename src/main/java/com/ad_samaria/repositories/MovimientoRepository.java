@@ -6,8 +6,10 @@
 package com.ad_samaria.repositories;
 
 import com.ad_samaria.models.Movimiento;
+import com.ad_samaria.projections.MovimientoGeneralProjection;
 import com.ad_samaria.projections.MovimientoProjection;
 import com.ad_samaria.projections.ResumenProjection;
+import com.ad_samaria.projections.TotalesGeneralesProjection;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
@@ -23,15 +25,18 @@ import org.springframework.stereotype.Repository;
 public interface MovimientoRepository extends CrudRepository<Movimiento, Object> {
 
     @Query(value
-            = "SELECT m.tesoreria_id AS tesoreriaId, "
-            + "       COALESCE(SUM(CASE WHEN m.tipo_id = 1 THEN m.cantidad ELSE 0 END),0) AS ingresos, "
-            + "       COALESCE(SUM(CASE WHEN m.tipo_id = 2 THEN m.cantidad ELSE 0 END),0) AS egresos "
+            = "SELECT "
+            + "  m.tesoreria_id AS tesoreriaId, "
+            + "  COALESCE(SUM(CASE WHEN m.tipo_id = 1 THEN m.cantidad ELSE 0 END),0) AS ingresos, "
+            + "  COALESCE(SUM(CASE WHEN m.tipo_id = 2 THEN m.cantidad ELSE 0 END),0) AS egresos "
             + "FROM ad_samaria.movimiento m "
-            + "WHERE m.fecha BETWEEN :desde AND :hasta "
+            + "WHERE m.fecha BETWEEN COALESCE(CAST(:desde AS date), CAST('2000-01-01' AS date)) AND COALESCE(CAST(:hasta AS date), CAST('2100-12-31' AS date)) "
             + "GROUP BY m.tesoreria_id",
             nativeQuery = true)
-    List<Object[]> totalesPorTesoreriaEntre(@Param("desde") LocalDate desde,
-            @Param("hasta") LocalDate hasta);
+    List<Object[]> totalesPorTesoreriaEntre(
+            @Param("desde") LocalDate desde,
+            @Param("hasta") LocalDate hasta
+    );
 
     @Query(value = ""
             + "SELECT "
@@ -70,13 +75,13 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Object>
             @Param("q") String q
     );
 
-    @Query(value = "SELECT "
-            + "  COALESCE(SUM(CASE WHEN LOWER(tm.nombre) LIKE 'ingreso%%' THEN m.cantidad ELSE 0 END),0) AS totalIngresos, "
-            + "  COALESCE(SUM(CASE WHEN LOWER(tm.nombre) LIKE 'egreso%%'  THEN m.cantidad ELSE 0 END),0) AS totalEgresos "
-            + "FROM ad_samaria.movimiento m "
-            + "JOIN ad_samaria.tipo_movimiento tm ON tm.id = m.tipo_id "
-            + "WHERE m.tesoreria_id = :tesoreriaId "
-            + "  AND m.fecha BETWEEN :ini AND :fin",
+    @Query(value = "SELECT\n"
+            + "    COALESCE(SUM(CASE WHEN tm.nombre = 'Ingreso' THEN m.cantidad ELSE 0 END), 0) AS totalIngresos,\n"
+            + "    COALESCE(SUM(CASE WHEN tm.nombre = 'Egreso'  THEN m.cantidad ELSE 0 END), 0) AS totalEgresos\n"
+            + "  FROM ad_samaria.movimiento m\n"
+            + "  JOIN ad_samaria.tipo_movimiento tm ON tm.id = m.tipo_id\n"
+            + "  WHERE m.tesoreria_id = :tesoreriaId\n"
+            + "    AND m.fecha BETWEEN CAST(:ini AS date) AND CAST(:fin AS date)",
             nativeQuery = true)
     ResumenProjection resumenTesoreria(
             @Param("tesoreriaId") Long tesoreriaId,
@@ -107,7 +112,7 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Object>
             + "        JOIN ad_samaria.tipo_movimiento tm ON tm.id = m.tipo_id\n"
             + "        JOIN ad_samaria.categoria c ON c.id = m.categoria_id\n"
             + "        WHERE m.tesoreria_id = :tesId\n"
-            + "          AND m.fecha BETWEEN :desde AND :hasta\n"
+            + "          AND m.fecha BETWEEN :desde AND :hasta\n and c.finanzas_generales "
             + "        ORDER BY m.fecha ASC, m.id ASC", nativeQuery = true)
     List<Object[]> findMovimientosConNombres(
             @Param("tesId") Long tesoreriaId,
@@ -126,11 +131,63 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Object>
             + "JOIN ad_samaria.tesoreria       t  ON t.id  = m.tesoreria_id "
             + "JOIN ad_samaria.tipo_movimiento tm ON tm.id = m.tipo_id "
             + "LEFT JOIN ad_samaria.categoria  c  ON c.id  = m.categoria_id "
-            + "WHERE m.fecha BETWEEN :desde AND :hasta "
+            + "WHERE m.fecha BETWEEN :desde AND :hasta and c.finanzas_generales = true "
             + "ORDER BY m.fecha ASC, m.id ASC",
             nativeQuery = true)
     List<Object[]> findMovimientosConNombresTodas(
             @Param("desde") LocalDate desde,
             @Param("hasta") LocalDate hasta);
 
+    @Query(value = "SELECT\n"
+            + "  t.id     AS tesoreriaId,\n"
+            + "  t.nombre AS tesoreria,\n"
+            + "  c.id     AS categoriaId,\n"
+            + "  c.nombre AS categoria,\n"
+            + "  tm.nombre AS tipo,\n"
+            + "  COALESCE(SUM(m.cantidad),0) AS amount \n"
+            + "FROM ad_samaria.movimiento m\n"
+            + "JOIN ad_samaria.tesoreria       t  ON t.id  = m.tesoreria_id\n"
+            + "JOIN ad_samaria.categoria       c  ON c.id  = m.categoria_id\n"
+            + "JOIN ad_samaria.tipo_movimiento tm ON tm.id = m.tipo_id\n"
+            + "WHERE c.finanzas_generales = true\n"
+            + "  AND (CAST(:desde AS date) IS NULL OR m.fecha >= CAST(:desde AS date))\n"
+            + "  AND (CAST(:hasta AS date) IS NULL OR m.fecha < CAST(:hasta AS date))\n"
+            + "  AND (\n"
+            + "       CAST(:q AS varchar) IS NULL\n"
+            + "    OR LOWER(t.nombre) LIKE LOWER(CONCAT('%', CAST(:q AS varchar), '%'))\n"
+            + "    OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', CAST(:q AS varchar), '%'))\n"
+            + "  )\n"
+            + "GROUP BY t.id, t.nombre, c.id, c.nombre, tm.nombre\n"
+            + "ORDER BY t.nombre, c.nombre",
+            nativeQuery = true)
+    List<MovimientoGeneralProjection> listarMovimientosGenerales(
+            @Param("desde") LocalDate desde,
+            @Param("hasta") LocalDate hasta,
+            @Param("q") String q
+    );
+
+    @Query(value = "SELECT\n"
+            + "    COALESCE(SUM(CASE WHEN tm.nombre = 'Ingreso' THEN m.cantidad ELSE 0 END), 0) AS ingresos,\n"
+            + "    COALESCE(SUM(CASE WHEN tm.nombre = 'Egreso' THEN m.cantidad ELSE 0 END), 0) AS egresos\n"
+            + "FROM ad_samaria.movimiento m\n"
+            + "JOIN ad_samaria.categoria c ON c.id = m.categoria_id\n"
+            + "JOIN ad_samaria.tipo_movimiento tm ON tm.id = m.tipo_id\n"
+            + "WHERE c.finanzas_generales = true\n"
+            + "  AND (CAST(:desde AS date) IS NULL OR m.fecha >= CAST(:desde AS date))\n"
+            + "  AND (CAST(:hasta AS date) IS NULL OR m.fecha < CAST(:hasta AS date))\n"
+            + "  AND (\n"
+            + "    CAST(:q AS varchar) IS NULL OR\n"
+            + "    EXISTS (\n"
+            + "      SELECT 1\n"
+            + "      FROM ad_samaria.tesoreria t\n"
+            + "      WHERE t.id = m.tesoreria_id\n"
+            + "        AND (LOWER(t.nombre) LIKE LOWER(CONCAT('%', CAST(:q AS varchar), '%')))\n"
+            + "    )\n"
+            + "    OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', CAST(:q AS varchar), '%'))\n"
+            + "  )", nativeQuery = true)
+    TotalesGeneralesProjection totalesMovimientosGenerales(
+            @Param("desde") LocalDate desde,
+            @Param("hasta") LocalDate hasta,
+            @Param("q") String q
+    );
 }

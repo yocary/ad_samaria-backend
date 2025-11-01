@@ -14,10 +14,12 @@ public class CategoriaMiniRes {
     public Long id;
     public String nombre;
     public String tipo; // "Ingreso" | "Egreso"
+    public Boolean finanzasGenerales;
 
-    public CategoriaMiniRes(Long id, String nombre, String tipo) {
+    public CategoriaMiniRes(Long id, String nombre, String tipo, Boolean finanzasGenerales) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
+        this.finanzasGenerales = finanzasGenerales;
     }
 }

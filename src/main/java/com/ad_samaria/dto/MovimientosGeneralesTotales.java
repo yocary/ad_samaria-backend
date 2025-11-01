@@ -5,17 +5,17 @@
  */
 package com.ad_samaria.dto;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-
 /**
  *
  * @author Yocary
  */
-public class CrearCategoriaReq {
+public class MovimientosGeneralesTotales {
 
-    public String nombre;
-    public Long tipoMovimientoId;
-    @JsonAlias({"finanzas_generales", "finanzasGenerales"})
-    public Boolean finanzasGenerales;
+    public double ingresos;
+    public double egresos;
 
+    public MovimientosGeneralesTotales(double ingresos, double egresos) {
+        this.ingresos = ingresos;
+        this.egresos = egresos;
+    }
 }

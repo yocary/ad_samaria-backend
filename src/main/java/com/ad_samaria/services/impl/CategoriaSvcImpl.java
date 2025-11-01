@@ -70,7 +70,7 @@ public class CategoriaSvcImpl extends CommonSvcImpl<Categoria, CategoriaReposito
                 .stream()
                 .map(c -> {
                     String tipo = tipoRepo.findById(c.getAplicaA()).map(TipoMovimiento::getNombre).orElse("");
-                    return new CategoriaMiniRes(c.getId(), c.getNombre(), tipo);
+                    return new CategoriaMiniRes(c.getId(), c.getNombre(), tipo, c.getFinanzasGenerales());
                 })
                 .collect(Collectors.toList());
     }
@@ -95,8 +95,9 @@ public class CategoriaSvcImpl extends CommonSvcImpl<Categoria, CategoriaReposito
         Categoria c = new Categoria();
         c.setNombre(req.nombre.trim());
         c.setAplicaA(tipo.getId());
+        c.setFinanzasGenerales(Boolean.TRUE.equals(req.finanzasGenerales));
         Categoria saved = repository.save(c);
-        return new CategoriaMiniRes(saved.getId(), saved.getNombre(), tipo.getNombre());
+        return new CategoriaMiniRes(saved.getId(), saved.getNombre(), tipo.getNombre(), saved.getFinanzasGenerales());
     }
 
     @Override
@@ -127,9 +128,10 @@ public class CategoriaSvcImpl extends CommonSvcImpl<Categoria, CategoriaReposito
 
         c.setNombre(req.nombre.trim());
         c.setAplicaA(tipo.getId());
+        c.setFinanzasGenerales(Boolean.TRUE.equals(req.finanzasGenerales));
         Categoria saved = repository.save(c);
 
-        return new CategoriaMiniRes(saved.getId(), saved.getNombre(), tipo.getNombre());
+        return new CategoriaMiniRes(saved.getId(), saved.getNombre(), tipo.getNombre(), saved.getFinanzasGenerales());
     }
 
     @Override
