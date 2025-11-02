@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -34,6 +36,10 @@ public class Categoria implements Serializable {
 
     @Column(name = "finanzas_generales", nullable = false)
     private Boolean finanzasGenerales = Boolean.FALSE;
+
+    @ManyToOne(optional = false) // en Fase A puede ser optional=true; en Fase B pásalo a false
+    @JoinColumn(name = "tesoreria_id")
+    private Tesoreria tesoreria;
 
     public Long getId() {
         return id;
@@ -65,6 +71,14 @@ public class Categoria implements Serializable {
 
     public void setFinanzasGenerales(Boolean finanzasGenerales) {
         this.finanzasGenerales = finanzasGenerales;
+    }
+
+    public Tesoreria getTesoreria() {
+        return tesoreria;
+    }
+
+    public void setTesoreria(Tesoreria tesoreria) {
+        this.tesoreria = tesoreria;
     }
 
 }

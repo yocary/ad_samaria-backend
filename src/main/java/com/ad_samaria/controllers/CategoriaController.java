@@ -8,6 +8,7 @@ package com.ad_samaria.controllers;
 import com.ad_samaria.commons.CommonController;
 import com.ad_samaria.dto.ActualizarCategoriaReq;
 import com.ad_samaria.dto.CategoriaMiniRes;
+import com.ad_samaria.dto.CategoriaRes;
 import com.ad_samaria.dto.CrearCategoriaReq;
 import com.ad_samaria.dto.TipoMovimientoMini;
 import com.ad_samaria.models.Categoria;
@@ -34,8 +35,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoriaController extends CommonController<Categoria, CategoriaSvc, CategoriaValidator> {
 
     @GetMapping("/categorias")
-    public ResponseEntity<List<CategoriaMiniRes>> getCategoriasPorTipo(@RequestParam("tipo") String tipo) {
-        return ResponseEntity.ok(service.listarPorTipoCategoria(tipo));
+    public ResponseEntity<List<CategoriaMiniRes>> getCategoriasPorTipo(
+            @RequestParam("tipo") String tipo,
+            @RequestParam("tesoreriaId") Long tesoreriaId) {
+        return ResponseEntity.ok(service.listarPorTesoreriaYTipoNombre(tesoreriaId, tipo));
     }
 
     @GetMapping("/tipos-movimiento")
@@ -43,14 +46,26 @@ public class CategoriaController extends CommonController<Categoria, CategoriaSv
         return ResponseEntity.ok(service.listarTipos());
     }
 
+//    @PostMapping("/categorias")
+//    public ResponseEntity<CategoriaMiniRes> crearCategoria(@RequestBody CrearCategoriaReq req) {
+//        CategoriaMiniRes out = service.crearCategoria(req);
+//        return ResponseEntity.ok(out);
+//    }
+//
+//    @PutMapping("/categorias/{id}")
+//    public ResponseEntity<CategoriaMiniRes> actualizarCategoria(
+//            @PathVariable Long id,
+//            @RequestBody ActualizarCategoriaReq req) {
+//        return ResponseEntity.ok(service.actualizarCategoria(id, req));
+//    }
     @PostMapping("/categorias")
-    public ResponseEntity<CategoriaMiniRes> crearCategoria(@RequestBody CrearCategoriaReq req) {
-        CategoriaMiniRes out = service.crearCategoria(req);
-        return ResponseEntity.ok(out);
+    public ResponseEntity<CategoriaRes> crearCategoria(@RequestBody CrearCategoriaReq req) {
+        return ResponseEntity.ok(service.crearCategoria(req)); // ahora types matchean
     }
 
+    // Actualizar categoría (valida pertenencia, no permite mover de tesorería)
     @PutMapping("/categorias/{id}")
-    public ResponseEntity<CategoriaMiniRes> actualizarCategoria(
+    public ResponseEntity<CategoriaRes> actualizarCategoria(
             @PathVariable Long id,
             @RequestBody ActualizarCategoriaReq req) {
         return ResponseEntity.ok(service.actualizarCategoria(id, req));
@@ -61,4 +76,12 @@ public class CategoriaController extends CommonController<Categoria, CategoriaSv
         service.eliminarCategoria(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/por-tesoreria")
+    public ResponseEntity<List<CategoriaRes>> listarPorTesoreriaYTipo(
+            @RequestParam Long tesoreriaId,
+            @RequestParam Long tipoId) {
+        return ResponseEntity.ok(service.listarPorTesoreriaYTipo(tesoreriaId, tipoId));
+    }
+
 }

@@ -35,4 +35,20 @@ public interface CategoriaRepository extends CrudRepository<Categoria, Object> {
 
     boolean existsByNombreIgnoreCaseAndAplicaAAndIdNot(
             String nombre, Long tipoMovimientoId, Long excludeId);
+
+    List<Categoria> findByTesoreria_IdAndAplicaAOrderByNombreAsc(Long tesoreriaId, Long aplicaA);
+
+    // Validar pertenencia (para crear movimiento)
+    boolean existsByIdAndTesoreria_IdAndAplicaA(Long id, Long tesoreriaId, Short aplicaA);
+
+    // (Opcional) para panel Finanzas Generales (solo flag true)
+    List<Categoria> findByFinanzasGeneralesTrueOrderByNombreAsc();
+
+    @Query("SELECT c\n"
+            + "  FROM Categoria c\n"
+            + "  JOIN TipoMovimiento t ON t.id = c.aplicaA\n"
+            + "  WHERE LOWER(t.nombre) = LOWER(:tipoNombre)\n"
+            + "    AND c.tesoreria.id = :tesoreriaId\n"
+            + "  ORDER BY c.nombre ASC")
+    List<Categoria> findByTesoreriaAndTipoNombre(@Param("tesoreriaId") Long tesoreriaId, @Param("tipoNombre") String tipoNombre);
 }

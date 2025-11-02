@@ -8,6 +8,8 @@ package com.ad_samaria.services;
 import com.ad_samaria.commons.CommonSvc;
 import com.ad_samaria.dto.ActualizarCategoriaReq;
 import com.ad_samaria.dto.CategoriaMiniRes;
+import com.ad_samaria.dto.CategoriaRes;
+import com.ad_samaria.dto.CategoriaUpsertReq;
 import com.ad_samaria.dto.CrearCategoriaReq;
 import com.ad_samaria.dto.TipoMovimientoMini;
 import com.ad_samaria.models.Categoria;
@@ -26,9 +28,17 @@ public interface CategoriaSvc extends CommonSvc<Categoria> {
 
     public List<CategoriaMiniRes> listarPorTipoCategoria(String tipoNombre);
 
-    public CategoriaMiniRes crearCategoria(CrearCategoriaReq req);
-
-    public CategoriaMiniRes actualizarCategoria(Long id, ActualizarCategoriaReq req);
-
+//    public CategoriaMiniRes crearCategoria(CrearCategoriaReq req);
+//
+//    public CategoriaMiniRes actualizarCategoria(Long id, ActualizarCategoriaReq req);
     public void eliminarCategoria(Long id);
+
+    public CategoriaRes crearCategoria(CrearCategoriaReq req);
+
+    public CategoriaRes actualizarCategoria(Long id, ActualizarCategoriaReq req);
+
+    public List<CategoriaRes> listarPorTesoreriaYTipo(Long tesoreriaId, Long tipoId);
+
+    public List<CategoriaMiniRes> listarPorTesoreriaYTipoNombre(Long tesoreriaId, String tipoNombre);
+
 }
