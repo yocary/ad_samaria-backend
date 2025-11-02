@@ -1,24 +1,21 @@
-# Usa una imagen base de Maven
+# ---------- Build ----------
 FROM maven:3.8.1-openjdk-8 as build
-
-# Establece el directorio de trabajo
 WORKDIR /app
-
-# Copia el archivo pom.xml y el código fuente
 COPY pom.xml .
 COPY src ./src
+RUN mvn -q -DskipTests package
 
-# Compila la aplicación
-RUN mvn package -DskipTests
-
-# Usa una imagen base de Java para la ejecución
+# ---------- Runtime ----------
 FROM openjdk:8-jdk-alpine
 
-# Establece el directorio de trabajo
-WORKDIR /app
+# 1) Instalar fontconfig + fuentes DejaVu (para PDFs)
+RUN apk add --no-cache fontconfig ttf-dejavu
 
-# Copia el jar generado al contenedor
+# 2) Forzar headless y UTF-8 a nivel JVM
+ENV JAVA_TOOL_OPTIONS="-Djava.awt.headless=true -Dfile.encoding=UTF-8"
+
+WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Establece el comando para ejecutar la aplicación con opciones de memoria
+# 3) Ejecutar
 ENTRYPOINT ["java", "-Xms64m", "-Xmx128m", "-XX:+UseG1GC", "-jar", "app.jar"]
