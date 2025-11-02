@@ -64,8 +64,8 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Object>
             + "WHERE m.tesoreria_id = :tesoreriaId "
             + "  AND m.fecha BETWEEN :ini AND :fin "
             + "  AND ( :q = '' "
-            + "        OR m.concepto ILIKE CONCAT('%', :q, '%') "
-            + "        OR COALESCE(c.nombre, '')  ILIKE CONCAT('%', :q, '%') ) "
+            + "        OR m.concepto ILIKE CONCAT(:q, '%') " // ← Cambiado aquí
+            + "        OR COALESCE(c.nombre, '')  ILIKE CONCAT(:q, '%') ) " // ← Y aquí
             + "ORDER BY m.fecha DESC, m.id DESC",
             nativeQuery = true)
     List<MovimientoProjection> findMovimientos(
