@@ -22,12 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRPropertiesUtil;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperReportsContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -41,6 +44,22 @@ import org.springframework.web.server.ResponseStatusException;
  */
 @Service
 public class CertificadoSvcImpl extends CommonSvcImpl<Certificado, CertificadoRepository> implements CertificadoSvc {
+
+    static {
+        // Modo sin interfaz gráfica (evita el NPE de FontConfiguration)
+        System.setProperty("java.awt.headless", "true");
+
+        try {
+            JasperReportsContext ctx = DefaultJasperReportsContext.getInstance();
+            JRPropertiesUtil props = JRPropertiesUtil.getInstance(ctx);
+
+            // Fuente segura y embebible
+            props.setProperty("net.sf.jasperreports.default.font.name", "DejaVu Sans");
+            props.setProperty("net.sf.jasperreports.awt.ignore.missing.font", "true");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Autowired
     private JasperPdfService jasper;
