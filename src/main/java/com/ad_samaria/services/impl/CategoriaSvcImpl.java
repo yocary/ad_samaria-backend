@@ -147,7 +147,12 @@ public class CategoriaSvcImpl extends CommonSvcImpl<Categoria, CategoriaReposito
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException("Categoría no encontrada");
         }
-        repository.deleteById(id);
+
+        try {
+            repository.deleteById(id);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new IllegalStateException("No se puede eliminar la categoría porque tiene movimientos asociados.");
+        }
     }
 
     //CAMBIOS

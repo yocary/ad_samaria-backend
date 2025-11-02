@@ -14,7 +14,9 @@ import com.ad_samaria.dto.TipoMovimientoMini;
 import com.ad_samaria.models.Categoria;
 import com.ad_samaria.services.CategoriaSvc;
 import com.ad_samaria.validator.CategoriaValidator;
+import java.util.Collections;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,9 +74,17 @@ public class CategoriaController extends CommonController<Categoria, CategoriaSv
     }
 
     @DeleteMapping("/categorias/{id}")
-    public ResponseEntity<Void> eliminarCategoria(@PathVariable Long id) {
-        service.eliminarCategoria(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> eliminarCategoria(@PathVariable Long id) {
+        try {
+            service.eliminarCategoria(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("message", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("message", e.getMessage()));
+        }
     }
 
     @GetMapping("/por-tesoreria")
