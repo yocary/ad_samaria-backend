@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,5 +87,15 @@ public class PersonaController extends CommonController<Persona, PersonaSvc, Per
     @GetMapping("/{id}/ficha")
     public PersonaFichaDTO ficha(@PathVariable Long id) {
         return service.obtenerFicha(id);
+    }
+
+    @GetMapping("/form/{id}")
+    public CrearPersonaRequest obtenerForm(@PathVariable Long id) {
+        return service.obtenerPersonaForm(id);
+    }
+
+    @PutMapping("/form/{id}")
+    public Persona actualizar(@PathVariable Long id, @RequestBody CrearPersonaRequest req) {
+        return service.actualizarPersona(id, req);
     }
 }

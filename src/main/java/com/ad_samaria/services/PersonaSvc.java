@@ -24,7 +24,11 @@ public interface PersonaSvc extends CommonSvc<Persona> {
     List<PersonaMiniDTO> buscarMin(String q);
 
     List<PersonaMiniProjection> listarPersonasMini();
-    
+
     PersonaFichaDTO obtenerFicha(Long personaId);
+
+    public CrearPersonaRequest obtenerPersonaForm(Long id);
+
+    public Persona actualizarPersona(Long id, CrearPersonaRequest req);
 
 }

@@ -52,7 +52,6 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
     @Override
     public Persona crearPersona(CrearPersonaRequest req) {
 
-
         Persona p = new Persona();
         p.setNombres(req.nombres != null ? req.nombres.trim() : null);
         p.setApellidoPaterno(req.apellidoPaterno != null ? req.apellidoPaterno.trim() : null);
@@ -146,6 +145,68 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
                 cab.getMinisterio(),
                 familias, grupos, liderazgos
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CrearPersonaRequest obtenerPersonaForm(Long id) {
+        Persona p = repository.findById(id)
+                .map(x -> (Persona) x)
+                .orElseThrow(() -> new RuntimeException("Persona no encontrada: " + id));
+
+        CrearPersonaRequest dto = new CrearPersonaRequest();
+        dto.nombres = p.getNombres();
+        dto.apellidoPaterno = p.getApellidoPaterno();
+        dto.apellidoMaterno = p.getApellidoMaterno();
+        dto.telefono = p.getTelefono();
+        dto.direccion = p.getDireccion();
+
+        dto.fechaNacimiento = p.getFechaNacimiento() != null
+                ? p.getFechaNacimiento().toString() // yyyy-MM-dd
+                : null;
+
+        // Conversión de Short → Long para sexoId
+        dto.sexoId = p.getSexoId() != null ? p.getSexoId().longValue() : null;
+        dto.estadoCivilId = p.getEstadoCivilId();
+        dto.clasificacionId = p.getClasifSocialId();
+        dto.tipoPersonaId = p.getTipoPersonaId();
+
+        return dto;
+    }
+
+    @Override
+    @Transactional
+    public Persona actualizarPersona(Long id, CrearPersonaRequest req) {
+        Persona p = repository.findById(id)
+                .map(x -> (Persona) x)
+                .orElseThrow(() -> new RuntimeException("Persona no encontrada: " + id));
+
+        // Datos básicos
+        p.setNombres(req.nombres != null ? req.nombres.trim() : null);
+        p.setApellidoPaterno(req.apellidoPaterno != null ? req.apellidoPaterno.trim() : null);
+        p.setApellidoMaterno(req.apellidoMaterno != null ? req.apellidoMaterno.trim() : null);
+        p.setTelefono(req.telefono != null ? req.telefono.trim() : null);
+        p.setDireccion(req.direccion != null ? req.direccion.trim() : null);
+
+        // Fecha
+        if (req.fechaNacimiento != null && !req.fechaNacimiento.trim().isEmpty()) {
+            p.setFechaNacimiento(LocalDate.parse(req.fechaNacimiento)); // "yyyy-MM-dd"
+        } else {
+            p.setFechaNacimiento(null);
+        }
+
+        // Relaciones (Long → Short)
+        if (req.sexoId != null) {
+            p.setSexoId(req.sexoId.shortValue());
+        } else {
+            p.setSexoId(null);
+        }
+
+        p.setEstadoCivilId(req.estadoCivilId);
+        p.setClasifSocialId(req.clasificacionId);
+        p.setTipoPersonaId(req.tipoPersonaId);
+
+        return repository.save(p);
     }
 
 }
