@@ -30,8 +30,8 @@ public interface PersonaRepository extends CrudRepository<Persona, Object> {
             = "SELECT p.id, "
             + "       TRIM(p.nombres || ' ' || p.apellido_paterno || ' ' || COALESCE(p.apellido_materno,'')) AS nombre "
             + "FROM ad_samaria.persona p "
-            + "WHERE LOWER(TRIM(p.nombres || ' ' || p.apellido_paterno || ' ' || COALESCE(p.apellido_materno,''))) "
-            + "      LIKE LOWER(CONCAT('%', :q, '%')) "
+            + "WHERE LOWER(TRIM(p.nombres || ' ' || p.apellido_paterno || ' ' || COALESCE(p.apellido_materno,''))) LIKE LOWER(CONCAT('%', :q, '%')) "
+            + "  AND LOWER(p.nombres) NOT LIKE '%administrador%' "
             + "ORDER BY p.apellido_paterno ASC, p.apellido_materno ASC "
             + "LIMIT 20",
             nativeQuery = true)
