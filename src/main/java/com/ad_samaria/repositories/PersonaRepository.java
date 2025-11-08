@@ -39,11 +39,12 @@ public interface PersonaRepository extends CrudRepository<Persona, Object> {
     List<Object[]> buscarMin(@Param("q") String q);
 
     @Query(value
-            = "SELECT p.id AS id, "
-            + "TRIM(p.nombres || ' ' || p.apellido_paterno || COALESCE(' ' || p.apellido_materno, '')) AS nombre "
+            = "SELECT "
+            + "  p.id AS id, "
+            + "  TRIM(p.nombres || ' ' || p.apellido_paterno || COALESCE(' ' || p.apellido_materno, '')) AS nombre "
             + "FROM ad_samaria.persona p "
             + "WHERE LOWER(p.nombres) NOT LIKE '%administrador%' "
-            + "ORDER BY p.apellido_paterno, p.apellido_materno NULLS LAST, p.nombres",
+            + "ORDER BY nombre ASC",
             nativeQuery = true)
     @Transactional(readOnly = true)
     List<PersonaMiniProjection> listarPersonasMini();
