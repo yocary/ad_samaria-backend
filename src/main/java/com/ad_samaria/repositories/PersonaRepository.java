@@ -26,15 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface PersonaRepository extends CrudRepository<Persona, Object> {
 
-    Optional<Persona> findByDpi(String dpi);
-
     @Query(value
             = "SELECT p.id, "
             + "       TRIM(p.nombres || ' ' || p.apellido_paterno || ' ' || COALESCE(p.apellido_materno,'')) AS nombre "
             + "FROM ad_samaria.persona p "
-            + "WHERE "
-            + "  LOWER(TRIM(p.nombres || ' ' || p.apellido_paterno || ' ' || COALESCE(p.apellido_materno,''))) LIKE LOWER(CONCAT('%', :q, '%')) "
-            + "  OR LOWER(COALESCE(p.dpi, '')) LIKE LOWER(CONCAT('%', :q, '%')) "
+            + "WHERE LOWER(TRIM(p.nombres || ' ' || p.apellido_paterno || ' ' || COALESCE(p.apellido_materno,''))) "
+            + "      LIKE LOWER(CONCAT('%', :q, '%')) "
             + "ORDER BY p.apellido_paterno ASC, p.apellido_materno ASC "
             + "LIMIT 20",
             nativeQuery = true)
@@ -64,7 +61,6 @@ public interface PersonaRepository extends CrudRepository<Persona, Object> {
             + "       CASE WHEN p.fecha_nacimiento IS NULL THEN NULL "
             + "            ELSE CAST(EXTRACT(YEAR FROM AGE(current_date, p.fecha_nacimiento)) AS INT) END AS edad, "
             + "       p.telefono AS telefono, "
-            + "       COALESCE(p.dpi,'') AS dpi, "
             + "        p.direccion AS direccion, "
             + "        TO_CHAR(p.fecha_nacimiento, 'DD/MM/YYYY') AS fechaNacimiento, "
             + "       m.nombre AS ministerio "

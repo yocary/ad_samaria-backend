@@ -42,16 +42,6 @@ public class CommonController<E, S extends CommonSvc<E>, V extends CommonValidat
 //        return ResponseEntity.ok().body(service.findAll());
 //    }
     
-//    @GetMapping("/{id}")
-//    @ApiOperation(value = "Consulta un objeto especifico de ad_samaria")
-//    public ResponseEntity<?> findById(@PathVariable(required = true) @ApiParam(value = "id") Long id, @RequestHeader(name = "Accept-Languaje", required = false) Locale locale){ //listarnos los datos en base al id si es en la tabla empleados ingreso mi dpi traera mis datos 
-//        Optional<E> o = service.findById(id);
-//        if(!o.isPresent()){
-//            return ResponseEntity.notFound().build();
-//        }
-//        
-//        return ResponseEntity.ok(o.get());
-//    }
     
     @PostMapping  //inserta datos en una tabla
     @ApiOperation(value = "Guarda la información de un objeto en ad_samaria")

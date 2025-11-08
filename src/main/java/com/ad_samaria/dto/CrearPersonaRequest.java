@@ -15,7 +15,6 @@ public class CrearPersonaRequest {
     public String apellidoPaterno;
     public String apellidoMaterno;
     public String telefono;
-    public String dpi;
     public String direccion;
 
     public Long sexoId;             // ad_samaria.sexo.id

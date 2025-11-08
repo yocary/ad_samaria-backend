@@ -39,9 +39,6 @@ public class Persona implements Serializable {
     @Column(name = "telefono", length = 25)
     private String telefono;
 
-    @Column(name = "dpi", unique = true, length = 25)
-    private String dpi;
-
     @Column(name = "direccion", length = 200)
     private String direccion;
 
@@ -104,14 +101,6 @@ public class Persona implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    public String getDpi() {
-        return dpi;
-    }
-
-    public void setDpi(String dpi) {
-        this.dpi = dpi;
     }
 
     public String getDireccion() {

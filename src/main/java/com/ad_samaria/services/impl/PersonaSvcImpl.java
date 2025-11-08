@@ -51,20 +51,13 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
 
     @Override
     public Persona crearPersona(CrearPersonaRequest req) {
-        // Validación simple de DPI duplicado (si envías DPI)
-        if (req.dpi != null && !req.dpi.trim().isEmpty()) {
-            repository.findByDpi(req.dpi.trim())
-                    .ifPresent(p -> {
-                        throw new RuntimeException("El DPI ya está registrado");
-                    });
-        }
+
 
         Persona p = new Persona();
         p.setNombres(req.nombres != null ? req.nombres.trim() : null);
         p.setApellidoPaterno(req.apellidoPaterno != null ? req.apellidoPaterno.trim() : null);
         p.setApellidoMaterno(req.apellidoMaterno != null ? req.apellidoMaterno.trim() : null);
         p.setTelefono(req.telefono != null ? req.telefono.trim() : null);
-        p.setDpi(req.dpi != null ? req.dpi.trim() : null);
         p.setDireccion(req.direccion != null ? req.direccion.trim() : null);
 
         if (req.fechaNacimiento != null && !req.fechaNacimiento.trim().isEmpty()) {
@@ -149,7 +142,6 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
                 cab.getEdad(),
                 cab.getFechaNacimiento(),
                 cab.getTelefono(),
-                cab.getDpi(),
                 cab.getDireccion(),
                 cab.getMinisterio(),
                 familias, grupos, liderazgos

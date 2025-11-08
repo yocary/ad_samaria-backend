@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
  */
 public class LoginRequest {
 
-    private String username; // puede ser DPI si así lo decides
+    private String username;
 
     private String password;
 

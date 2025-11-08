@@ -31,8 +31,6 @@ public interface PersonaFichaCabeceraProjection {
 
     String getTelefono();
 
-    String getDpi();
-
     String getDireccion();
 
     String getMinisterio();

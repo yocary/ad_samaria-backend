@@ -21,8 +21,6 @@ public interface PersonaListadoProjection {
 
     String getTelefono();
 
-    String getDpi();
-
     String getFechaNacimiento();
 
     String getSexo();
