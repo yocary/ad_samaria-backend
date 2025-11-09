@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -41,6 +42,7 @@ public class TesoreriaSvcImpl extends CommonSvcImpl<Tesoreria, TesoreriaReposito
     private MovimientoRepository movRepo;
 
     @Override
+    @Transactional
     public Tesoreria crearTesoreria(String nombre, Boolean estado) {
         if (nombre == null || nombre.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre es requerido");
@@ -73,7 +75,6 @@ public class TesoreriaSvcImpl extends CommonSvcImpl<Tesoreria, TesoreriaReposito
 //                return new LocalDate[]{ini, fin};
 //        }
 //    }
-
     @Override
     public List<TesoreriaRowDTO> listar(String estado, String q, String periodo) {
         // 1) tesorerías base
@@ -174,6 +175,7 @@ public class TesoreriaSvcImpl extends CommonSvcImpl<Tesoreria, TesoreriaReposito
     }
 
     @Override
+    @Transactional
     public void actualizarTesoreria(Long id, ActualizarTesoreriaReq req) {
         if (id == null) {
             throw new IllegalArgumentException("Id requerido");
@@ -202,6 +204,7 @@ public class TesoreriaSvcImpl extends CommonSvcImpl<Tesoreria, TesoreriaReposito
     }
 
     @Override
+    @Transactional
     public void eliminarTesoreria(Long id) {
         Tesoreria t = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tesorería no encontrada"));

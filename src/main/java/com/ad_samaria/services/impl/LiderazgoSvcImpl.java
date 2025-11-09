@@ -62,11 +62,13 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
+    @Transactional
     public void crear(String nombre) {
         repository.crear(nombre.trim());
     }
 
     @Override
+    @Transactional
     public void renombrar(Long id, String nombre) {
         int n = repository.renombrar(id, nombre.trim());
         if (n == 0) {
@@ -75,6 +77,7 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         repository.eliminar(id);
     }
@@ -87,6 +90,7 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
+    @Transactional
     public void crearRol(Long liderazgoId, CrearRolRequest req) {
         validarLiderazgo(liderazgoId);
 
@@ -101,6 +105,7 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
+    @Transactional
     public void editarRol(Long liderazgoId, Long rolId, EditarRolRequest req) {
         validarLiderazgo(liderazgoId);
 
@@ -122,6 +127,7 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
+    @Transactional
     public void eliminarRol(Long liderazgoId, Long rolId) {
         validarLiderazgo(liderazgoId);
         int deleted = rolRepository.eliminarRol(liderazgoId, rolId);
@@ -159,6 +165,7 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
+    @Transactional
     public void agregarMiembro(long liderazgoId, long personaId, long rolId) {
         try {
             int rows = liderazgoMiembroRepository.agregarMiembro(liderazgoId, personaId, rolId);
@@ -172,6 +179,7 @@ public class LiderazgoSvcImpl extends CommonSvcImpl<Liderazgo, LiderazgoReposito
     }
 
     @Override
+    @Transactional
     public void desactivarMiembro(Long liderazgoMiembroId) {
         int n = liderazgoMiembroRepository.desactivarMiembro(liderazgoMiembroId);
         if (n == 0) {

@@ -176,6 +176,7 @@ public class CategoriaSvcImpl extends CommonSvcImpl<Categoria, CategoriaReposito
     }
 
     @Override
+    @Transactional
     public CategoriaRes crearCategoria(CrearCategoriaReq req) {
         if (req.getTesoreriaId() == null) {
             throw new ResponseStatusException(BAD_REQUEST, "tesoreriaId es requerido");

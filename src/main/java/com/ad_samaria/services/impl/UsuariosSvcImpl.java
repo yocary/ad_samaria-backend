@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -28,6 +29,7 @@ public class UsuariosSvcImpl implements UsuariosSvc {
     private PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public Usuarios crearUsuario(Usuarios usuario) {
         // Cifrado de contraseña
         String hash = passwordEncoder.encode(usuario.getContrasenia());
@@ -46,11 +48,13 @@ public class UsuariosSvcImpl implements UsuariosSvc {
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         usuariosRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public Usuarios actualizar(Long id, Usuarios datos) {
         return usuariosRepository.findById(id).map(usuario -> {
             usuario.setNombreCompleto(datos.getNombreCompleto());

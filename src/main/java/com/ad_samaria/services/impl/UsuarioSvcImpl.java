@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -50,6 +51,7 @@ public class UsuarioSvcImpl extends CommonSvcImpl<Usuario, UsuarioRepository> im
     }
 
     @Override
+    @Transactional
     public Usuario crear(UsuarioCreateDTO req) {
         Persona p = personaRepo.findById(req.getPersonaId())
                 .orElseThrow(() -> new EntityNotFoundException("Persona no encontrada"));
@@ -175,6 +177,7 @@ public class UsuarioSvcImpl extends CommonSvcImpl<Usuario, UsuarioRepository> im
         return usernamePropuesto;
     }
 
+    @Transactional
     public void cambiarPassword(CambiarPasswordDTO req) {
         Usuario u = repository.findByUsernameIgnoreCase(req.getUsername())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));

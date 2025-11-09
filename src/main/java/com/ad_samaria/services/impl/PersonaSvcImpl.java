@@ -50,6 +50,7 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
     private TipoPersonaRepository tipoPersonaRepository;
 
     @Override
+    @Transactional
     public Persona crearPersona(CrearPersonaRequest req) {
 
         Persona p = new Persona();

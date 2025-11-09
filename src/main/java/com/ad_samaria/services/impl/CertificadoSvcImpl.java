@@ -65,6 +65,7 @@ public class CertificadoSvcImpl extends CommonSvcImpl<Certificado, CertificadoRe
     private JasperPdfService jasper;
 
     @Override
+    @Transactional
     public byte[] generarMembresiaPdf(Map<String, Object> params) {
 
         System.out.println("DATOS:::: " + params);
@@ -90,6 +91,7 @@ public class CertificadoSvcImpl extends CommonSvcImpl<Certificado, CertificadoRe
     }
 
     @Override
+    @Transactional
     public Certificado crearCertificadoMembresia(String nombreMiembro, String fechaIso) {
         try {
             Certificado c = new Certificado();
@@ -286,6 +288,7 @@ public class CertificadoSvcImpl extends CommonSvcImpl<Certificado, CertificadoRe
     }
 
     @Override
+    @Transactional
     public byte[] generarBautismoPdf(Map<String, Object> params) {
         try {
             ClassPathResource jr = new ClassPathResource("reportes/certificado_bautismo.jrxml");
@@ -300,6 +303,7 @@ public class CertificadoSvcImpl extends CommonSvcImpl<Certificado, CertificadoRe
     }
 
     @Override
+    @Transactional
     public Certificado crearCertificadoBautismo(String nombreMiembro, String fechaBautismoIso, String fechaExpedicionIso) {
         try {
             Certificado c = new Certificado();
@@ -342,6 +346,7 @@ public class CertificadoSvcImpl extends CommonSvcImpl<Certificado, CertificadoRe
     }
 
     @Override
+    @Transactional
     public Certificado crearCertificadoNinos(
             String nombreMiembro,
             String nombrePadre,
@@ -382,6 +387,7 @@ public class CertificadoSvcImpl extends CommonSvcImpl<Certificado, CertificadoRe
     }
 
     @Override
+    @Transactional
     public byte[] generarNinosPdf(Map<String, Object> params) {
         try {
             // archivo: src/main/resources/reportes/certificado_niños.jrxml
@@ -418,6 +424,7 @@ public class CertificadoSvcImpl extends CommonSvcImpl<Certificado, CertificadoRe
     }
 
     @Override
+    @Transactional
     public Certificado crearCertificadoMatrimonio(String esposo, String esposa, String fechaExpedicionIso) {
         try {
             Certificado c = new Certificado();

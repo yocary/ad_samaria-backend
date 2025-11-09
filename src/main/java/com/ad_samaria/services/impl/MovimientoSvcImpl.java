@@ -30,6 +30,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 /**
@@ -108,6 +109,7 @@ public class MovimientoSvcImpl extends CommonSvcImpl<Movimiento, MovimientoRepos
     }
 
     @Override
+    @Transactional
     public Long crearDesdeDTO(Long tesoreriaId, CrearMovimientoReq dto) {
         Long tipoId = resolveTipoId(dto.tipo, dto.tipoId);
         Movimiento m = crear(
@@ -118,6 +120,7 @@ public class MovimientoSvcImpl extends CommonSvcImpl<Movimiento, MovimientoRepos
     }
 
     @Override
+    @Transactional
     public void eliminar(Long tesoreriaId, Long movimientoId) {
         Movimiento m = repository.findById(movimientoId)
                 .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado"));
@@ -130,6 +133,7 @@ public class MovimientoSvcImpl extends CommonSvcImpl<Movimiento, MovimientoRepos
     }
 
     @Override
+    @Transactional
     public void actualizarDesdeDTO(Long tesoreriaId, Long movimientoId, CrearMovimientoReq req) {
         Movimiento m = repository.findById(movimientoId)
                 .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado"));
