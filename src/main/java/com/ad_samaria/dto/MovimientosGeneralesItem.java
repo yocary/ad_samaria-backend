@@ -18,14 +18,17 @@ public class MovimientosGeneralesItem {
     public Long categoriaId;
     public String categoria;
     public String tipo; // "Ingreso"|"Egreso"
+    public String fecha;
     public BigDecimal amount;
 
-    public MovimientosGeneralesItem(Long tesoreriaId, String tesoreria, Long categoriaId, String categoria, String tipo, BigDecimal amount) {
+    public MovimientosGeneralesItem(Long tesoreriaId, String tesoreria, Long categoriaId, String categoria, String tipo, String fecha, BigDecimal amount) {
         this.tesoreriaId = tesoreriaId;
         this.tesoreria = tesoreria;
         this.categoriaId = categoriaId;
         this.categoria = categoria;
         this.tipo = tipo;
+        this.fecha = fecha;
         this.amount = amount;
+
     }
 }

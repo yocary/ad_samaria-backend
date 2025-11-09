@@ -23,5 +23,8 @@ public interface MovimientoGeneralProjection {
 
     String getTipo();
 
+    String getFecha();
+
     BigDecimal getAmount();
+
 }

@@ -144,6 +144,7 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Object>
             + "  c.id     AS categoriaId,\n"
             + "  c.nombre AS categoria,\n"
             + "  tm.nombre AS tipo,\n"
+            + "  TO_CHAR(MAX(m.fecha), 'DD/MM/YYYY') AS fecha,\n"
             + "  COALESCE(SUM(m.cantidad),0) AS amount \n"
             + "FROM ad_samaria.movimiento m\n"
             + "JOIN ad_samaria.tesoreria       t  ON t.id  = m.tesoreria_id\n"
@@ -157,8 +158,8 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Object>
             + "    OR LOWER(t.nombre) LIKE LOWER(CONCAT('%', CAST(:q AS varchar), '%'))\n"
             + "    OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', CAST(:q AS varchar), '%'))\n"
             + "  )\n"
-            + "GROUP BY t.id, t.nombre, c.id, c.nombre, tm.nombre\n"
-            + "ORDER BY t.nombre, c.nombre",
+            + "GROUP BY t.id, t.nombre, c.id, c.nombre, tm.nombre, m.fecha\n"
+            + "ORDER BY MAX(m.fecha) DESC, t.nombre, c.nombre",
             nativeQuery = true)
     List<MovimientoGeneralProjection> listarMovimientosGenerales(
             @Param("desde") LocalDate desde,

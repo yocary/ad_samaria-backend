@@ -271,6 +271,7 @@ public class MovimientoSvcImpl extends CommonSvcImpl<Movimiento, MovimientoRepos
                 r.getCategoriaId(),
                 r.getCategoria(),
                 r.getTipo(),
+                r.getFecha(),
                 r.getAmount()
         ))
                 .collect(Collectors.toList());
