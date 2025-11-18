@@ -23,11 +23,11 @@ public class PersonaFichaDTO {
     public Integer edad;      
     public String telefono;
     public String direccion;
-    public String ministerio;   
+//    public String ministerio;   
     public String fechaNacimiento;
 
     public List<FichaFamiliaDTO> familias;
-    public List<FichaGrupoDTO> grupos;
+//    public List<FichaGrupoDTO> grupos;
     public List<FichaLiderazgoDTO> liderazgos;
 
     public PersonaFichaDTO() {
@@ -35,8 +35,10 @@ public class PersonaFichaDTO {
 
     public PersonaFichaDTO(Long id, String nombreCompleto, String estatus, String clasificacion,
             String tipoPersona, String estadoCivil, String sexo, Integer edad, String fechaNacimiento,
-            String telefono, String direccion, String ministerio,
-            List<FichaFamiliaDTO> familias, List<FichaGrupoDTO> grupos,
+            String telefono, String direccion, 
+//            String ministerio,
+            List<FichaFamiliaDTO> familias, 
+//            List<FichaGrupoDTO> grupos,
             List<FichaLiderazgoDTO> liderazgos) {
         this.id = id;
         this.nombreCompleto = nombreCompleto;
@@ -49,9 +51,9 @@ public class PersonaFichaDTO {
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.direccion = direccion;
-        this.ministerio = ministerio;
+//        this.ministerio = ministerio;
         this.familias = familias;
-        this.grupos = grupos;
+//        this.grupos = grupos;
         this.liderazgos = liderazgos;
 
     }

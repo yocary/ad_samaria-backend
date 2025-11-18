@@ -117,9 +117,9 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
                 .map(r -> new FichaFamiliaDTO(r.getFamiliaId(), r.getFamiliaNombre(), r.getRolFamiliar()))
                 .collect(Collectors.toList());
 
-        List<FichaGrupoDTO> grupos = repository.gruposDePersona(personaId).stream()
-                .map(r -> new FichaGrupoDTO(r.getGrupoId(), r.getGrupoNombre(), r.getMinisterio()))
-                .collect(Collectors.toList());
+//        List<FichaGrupoDTO> grupos = repository.gruposDePersona(personaId).stream()
+//                .map(r -> new FichaGrupoDTO(r.getGrupoId(), r.getGrupoNombre(), r.getMinisterio()))
+//                .collect(Collectors.toList());
 
         List<FichaLiderazgoDTO> liderazgos = repository.liderazgosDePersona(personaId).stream()
                 .map(r -> new FichaLiderazgoDTO(
@@ -143,8 +143,10 @@ public class PersonaSvcImpl extends CommonSvcImpl<Persona, PersonaRepository> im
                 cab.getFechaNacimiento(),
                 cab.getTelefono(),
                 cab.getDireccion(),
-                cab.getMinisterio(),
-                familias, grupos, liderazgos
+//                cab.getMinisterio(),
+                familias, 
+//                grupos, 
+                liderazgos
         );
     }
 
